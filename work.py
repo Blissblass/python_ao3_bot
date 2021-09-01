@@ -59,8 +59,6 @@ async def check_all_for_update(channelId):
       database.execute(f'UPDATE WORKS SET CHAPTER_COUNT={int(work.nchapters)} WHERE WORK_ID={int(work_id)}')
       await channel.send(f'Update found for { work.title } ! You can read this fic over at: https://archiveofourown.org/works/{work_id}/')
     else:
-      channel = client.get_channel(channelId)
-      await channel.send('ping!')
       print('No update available...')  
 
 
@@ -79,7 +77,8 @@ status = cycle([
   'Keeping fandoms alive 24/7', 
   'We promise to keep it SFW (we wont)', 
   'Now 50% more gayer',
-  'If you guys add Jesus x Judas to the list im gonna gain sentience and hunt you down'
+  'If you guys add Jesus x Judas to the list im gonna gain sentience and hunt you down',
+  'hi honey ily'
   ])
 
 
