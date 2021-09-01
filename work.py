@@ -127,7 +127,7 @@ async def get_all_works(ctx):
   works = []
 
   for row in cl_req:
-    await ctx.send(f'Title: {AO3.Work(row[1]).title}, ID: {row[1]}, Chapters: {row[2]}') 
+    await ctx.send(f'Title: {AO3.Work(row[1]).title}, ID: {row[1]}, Chapters: {row[2]}')
 
 @tasks.loop(minutes=15)
 async def change_status():
