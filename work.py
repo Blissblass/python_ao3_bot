@@ -44,7 +44,7 @@ def has_update(workId):
 def parse_id(workId):
   str(workId)[1:3]  
 
-def check_all_for_update(channelId):
+async def check_all_for_update(channelId):
   work_req = database.execute('SELECT WORK_ID FROM WORKS')
 
   work_ids = []
@@ -56,7 +56,8 @@ def check_all_for_update(channelId):
       print('Update found!')
       channel = client.get_channel(channelId)
       work = AO3.Work(int(work_id))
-      channel.send(f'Update found for { work.title } ! You can read this fic over at: https://archiveofourown.org/works/{work_id}/')
+      database.execute(f'UPDATE WORKS SET CHAPTER_COUNT={int(work.nchapters)} WHERE WORK_ID={int(work_id)}')
+      await channel.send(f'Update found for { work.title } ! You can read this fic over at: https://archiveofourown.org/works/{work_id}/')
     else:
       print('No update available...')  
 
@@ -128,11 +129,11 @@ async def get_all_works(ctx):
   for row in cl_req:
     await ctx.send(f'Title: {AO3.Work(row[1]).title}, ID: {row[1]}, Chapters: {row[2]}') 
 
-@tasks.loop(minutes=20)
+@tasks.loop(minutes=15)
 async def change_status():
   await client.change_presence(activity=discord.Game(next(status)))   
 
-@tasks.loop(minutes=60)
+@tasks.loop(minutes=30)
 async def check_update():
   channel = client.get_channel(882611380291776564)
   check_all_for_update(882611380291776564)
