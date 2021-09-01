@@ -1,6 +1,6 @@
 import re 
 
 def re_test():
-  return '(17,)'[1:3]
+  return int("".join(re.findall('\d', '(1356245,)')))
 
 print(re_test())  

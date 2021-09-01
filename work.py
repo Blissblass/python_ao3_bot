@@ -1,11 +1,10 @@
 import AO3
 import sqlite3
 import discord
-import discord
-from discord.ext import commands
-from discord.ext import tasks
+from discord.ext import commands, tasks
 from dotenv import load_dotenv
 import os
+import re
 from itertools import cycle
 
 # -- SETUP --
@@ -38,19 +37,29 @@ def has_update(workId):
   for row in savedWork:
     arr.append(row)
 
-  saved_nchapters = str(arr[0])[1:3]
+  saved_nchapters = int(str(arr[0])[1:3])
   newWork_nchapters = AO3.Work(workId).nchapters
   return saved_nchapters < newWork_nchapters
 
 def parse_id(workId):
   str(workId)[1:3]  
 
-def check_all_for_update():
+def check_all_for_update(channelId):
   work_req = database.execute('SELECT WORK_ID FROM WORKS')
+
   work_ids = []
   for row in work_req:
-    work_ids.append(str(row)[1:3])
-  return work_ids 
+    work_ids.append(int("".join(re.findall('\d', str(row)))))
+
+  for work_id in work_ids:
+    if has_update(int(work_id)):
+      print('Update found!')
+      channel = client.get_channel(channelId)
+      work = AO3.Work(int(work_id))
+      channel.send(f'Update found for { work.title } ! You can read this fic over at: https://archiveofourown.org/works/{work_id}/')
+    else:
+      print('No update available...')  
+
 
 
 
@@ -65,10 +74,9 @@ work = AO3.Work(workid) # Initiate a new Work class with the Work ID
 client = commands.Bot(command_prefix='!')
 status = cycle([
   'Keeping fandoms alive 24/7', 
-  'Almost too gay to be real', 
-  'Now with 50% more gay',
-  'Can\'t get any gayer!',
-  'If you guys add Jesus x Judas to the list im gonna gain sentience and hunt you down',
+  'We promise to keep it SFW (we wont)', 
+  'Now 50% more gayer',
+  'If you guys add Jesus x Judas to the list im gonna gain sentience and hunt you down'
   ])
 
 
@@ -78,6 +86,8 @@ status = cycle([
 async def on_ready():
   print('Logged in as {0.user}'.format(client))
   change_status.start()
+  check_update.start()
+
 # -- COMMANDS -- 
 
 @client.command() 
@@ -112,11 +122,21 @@ async def get_channel_id(ctx):
 
 @client.command()
 async def get_all_works(ctx):
-  await ctx.send(check_all_for_update())  
+  cl_req = database.execute('SELECT * FROM WORKS')
+  works = []
 
-@tasks.loop(minutes=5)
+  for row in cl_req:
+    await ctx.send(f'Title: {AO3.Work(row[1]).title}, ID: {row[1]}, Chapters: {row[2]}') 
+
+@tasks.loop(minutes=20)
 async def change_status():
   await client.change_presence(activity=discord.Game(next(status)))   
+
+@tasks.loop(minutes=60)
+async def check_update():
+  channel = client.get_channel(882611380291776564)
+  check_all_for_update(882611380291776564)
+
 
 
 
