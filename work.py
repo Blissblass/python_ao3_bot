@@ -135,8 +135,8 @@ async def change_status():
 
 @tasks.loop(minutes=30)
 async def check_update():
-  channel = client.get_channel(882611380291776564)
-  check_all_for_update(882611380291776564)
+  # channel = client.get_channel(882611380291776564)
+  await check_all_for_update(882611380291776564)
 
 
 
