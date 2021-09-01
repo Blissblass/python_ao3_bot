@@ -1,0 +1,7 @@
+discord.py = "*"
+ao3_api = "*"
+python-dotenv = "*"
+itertools = "*"
+re = "*"
+os = "*"
+sqlite3 = "*"
