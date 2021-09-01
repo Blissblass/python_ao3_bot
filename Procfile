@@ -1,1 +1,1 @@
-web:gunicorn ao3bot:app
+web: gunicorn ao3bot:app
