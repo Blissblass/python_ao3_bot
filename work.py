@@ -130,11 +130,11 @@ async def get_all_works(ctx):
   for row in cl_req:
     await ctx.send(f'Title: {AO3.Work(row[1]).title}, ID: {row[1]}, Chapters: {row[2]}')
 
-@tasks.loop(minutes=1)
+@tasks.loop(minutes=15)
 async def change_status():
   await client.change_presence(activity=discord.Game(next(status)))   
 
-@tasks.loop(minutes=1)
+@tasks.loop(minutes=30)
 async def check_update():
   # channel = client.get_channel(882611380291776564)
   await check_all_for_update(882611380291776564)
