@@ -60,7 +60,7 @@ async def check_all_for_update(channelId):
       await channel.send(f'Update found for { work.title } ! You can read this fic over at: https://archiveofourown.org/works/{work_id}/')
     else:
       channel = client.get_channel(channelId)
-      channel.send('ping!')
+      await channel.send('ping!')
       print('No update available...')  
 
 
