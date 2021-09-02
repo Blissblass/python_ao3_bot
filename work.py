@@ -130,6 +130,15 @@ async def get_all_works(ctx):
   for row in cl_req:
     await ctx.send(f'Title: {AO3.Work(row[1]).title}, ID: {row[1]}, Chapters: {row[2]}')
 
+@client.command()
+async def fetch_work(ctx, work_id):
+  if type(work_id) is int and len(work_id) > 0:
+    work = AO3.Work(work_id)
+    await ctx.send(f"Title: {work.title}, Work ID: {work_id}, Chapters: {work.nchapters}")
+  else:
+    await ctx.send("Please enter only numbers for the Work ID!")
+     
+
 @tasks.loop(minutes=5)
 async def change_status():
   await client.change_presence(activity=discord.Game(next(status)))   
