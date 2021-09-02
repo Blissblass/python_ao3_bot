@@ -132,7 +132,7 @@ async def get_all_works(ctx):
 
 @client.command()
 async def fetch_work(ctx, work_id):
-  if type(work_id) is int and len(work_id) > 0:
+  if type(int(work_id)) is int and len(work_id) > 0:
     work = AO3.Work(work_id)
     await ctx.send(f"Title: {work.title}, Work ID: {work_id}, Chapters: {work.nchapters}")
   else:
