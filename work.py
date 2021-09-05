@@ -57,9 +57,10 @@ async def check_all_for_update(channelId):
       channel = client.get_channel(channelId)
       work = AO3.Work(int(work_id))
       database.execute(f'UPDATE WORKS SET CHAPTER_COUNT={int(work.nchapters)} WHERE WORK_ID={int(work_id)}')
+      database.commit()
       await channel.send(f'Update found for { work.title } ! You can read this fic over at: https://archiveofourown.org/works/{work_id}/')
     else:
-      print('No update available...')  
+      print(f'No update available for { work_id }...')  
 
 
 
