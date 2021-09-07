@@ -142,12 +142,20 @@ async def extract_id(ctx, url):
 @client.command()
 async def cmd_help(ctx):
   embed = discord.Embed(title='Commands!', color=discord.Colour.from_rgb(153, 0, 0), description="""
+  
   get_channel_id: Gets the current channels id!
+
   get_all_works: Gets all the works previously added to the database.
+
   fetch_work <work_id>: Fetches work directly from AO3, used to check work manually in case an update task fails. Meaning you can also fetch works that arent in the database.
+  
   add_work <work_id>: Adds a work to the database so it can be periodically checked for updates.
+  
   extract_id <url>: Extracts id from an AO3 url so it can be fetched later on.
+
   """)
+  embed.add_field(name='This is a test field!', value='I have no idea what these do!', inline=False)
+  embed.add_field(name='This is another field!', value='I still dont know what it does, but now its inline!', inline=True)
   await ctx.send(embed=embed)
      
 
