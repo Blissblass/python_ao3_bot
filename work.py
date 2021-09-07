@@ -98,10 +98,6 @@ async def ping(ctx):
   await ctx.send('Pong!')
 
 @client.command()
-async def get_current_work(ctx):
-  await ctx.send(f"Current Work ID:{workid}, {work.title}. Has {work.nchapters} chapters.")  
-
-@client.command()
 async def exit(ctx):
   await ctx.send("Logging out...")
   await ctx.send("*(Bot will appear online for a few minutes)*")
@@ -140,11 +136,17 @@ async def fetch_work(ctx, work_id):
     await ctx.send("Please enter only numbers for the Work ID!")
 
 @client.command()
-async def help(ctx):
+async def extract_id(ctx, url):
+  ctx.send(AO3.utils.workid_from_url(url))    
+
+@client.command()
+async def cmd_help(ctx):
   embed = discord.Embed(title='Commands!', color='#990000', description="""
   get_channel_id: Gets the current channels id!
-  get_all_works: Gets all the works added to the database
-  fetch_work: Fetches work directly from AO3, used to check work manually in case an update task fails 
+  get_all_works: Gets all the works previously added to the database.
+  fetch_work <work_id>: Fetches work directly from AO3, used to check work manually in case an update task fails. Meaning you can also fetch works that arent in the database.
+  add_work <work_id>: Adds a work to the database so it can be periodically checked for updates.
+  extract_id <url>: Extracts id from an AO3 url so it can be fetched later on.
   """)
   await ctx.send(embed=embed)
      
