@@ -58,7 +58,7 @@ async def check_all_for_update(channelId):
       work = AO3.Work(int(work_id))
       database.execute(f'UPDATE WORKS SET CHAPTER_COUNT={int(work.nchapters)} WHERE WORK_ID={int(work_id)}')
       database.commit()
-      await channel.send(f'Update found for { work.title } ! You can read this fic over at: https://archiveofourown.org/works/{work_id}/')
+      await channel.send(f'Update found for { work.title }! You can read this fic over at: https://archiveofourown.org/works/{work_id}/')
     else:
       print(f'No update available for { work_id }...')  
 
@@ -149,6 +149,10 @@ async def cmd_help(ctx):
   embed.add_field(name='add_work <work_id>', value='Adds a work to the database so it can be periodically checked for updates.\n', inline=False)
   embed.add_field(name='extract_id <url>', value='Extracts id from an AO3 url so it can be fetched later on.\n', inline=False)
   await ctx.send(embed=embed)
+
+@client.command()
+async def mention_test(ctx):
+  await ctx.send(ctx.message.author.mention())  
      
 
 @tasks.loop(minutes=5)
