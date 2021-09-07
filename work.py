@@ -141,7 +141,7 @@ async def extract_id(ctx, url):
 
 @client.command()
 async def cmd_help(ctx):
-  embed = discord.Embed(title='Commands!', color='#990000', description="""
+  embed = discord.Embed(title='Commands!', color=discord.Colour.from_rgb(153, 0, 0), description="""
   get_channel_id: Gets the current channels id!
   get_all_works: Gets all the works previously added to the database.
   fetch_work <work_id>: Fetches work directly from AO3, used to check work manually in case an update task fails. Meaning you can also fetch works that arent in the database.
