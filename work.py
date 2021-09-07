@@ -143,11 +143,11 @@ async def extract_id(ctx, url):
 async def cmd_help(ctx):
   embed = discord.Embed(title='Commands!', color=discord.Colour.from_rgb(153, 0, 0), description='')
 
-  embed.add_field(name='get_channel_id', value='Gets the current channels id!')
-  embed.add_field(name='get_all_works', value='Gets all the works previously added to the database.')
-  embed.add_field(name='fetch_work <work_id>', value='Fetches work directly from AO3, used to check work manually in case an update task fails. Meaning you can also fetch works that arent in the database.')
-  embed.add_field(name='add_work <work_id>', value='Adds a work to the database so it can be periodically checked for updates.')
-  embed.add_field(name='extract_id <url>', value='Extracts id from an AO3 url so it can be fetched later on.')
+  embed.add_field(name='get_channel_id', value='Gets the current channels id!\n', inline=False)
+  embed.add_field(name='get_all_works', value='Gets all the works previously added to the database.\n', inline=False)
+  embed.add_field(name='fetch_work <work_id>', value='Fetches work directly from AO3, used to check work manually in case an update task fails. Meaning you can also fetch works that arent in the database.\n', inline=False)
+  embed.add_field(name='add_work <work_id>', value='Adds a work to the database so it can be periodically checked for updates.\n', inline=False)
+  embed.add_field(name='extract_id <url>', value='Extracts id from an AO3 url so it can be fetched later on.\n', inline=False)
   await ctx.send(embed=embed)
      
 
