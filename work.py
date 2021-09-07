@@ -152,7 +152,7 @@ async def cmd_help(ctx):
 
 @client.command()
 async def mention_test(ctx):
-  await ctx.send(ctx.message.author.mention())  
+  await ctx.send(ctx.message.author.mention)  
      
 
 @tasks.loop(minutes=5)
