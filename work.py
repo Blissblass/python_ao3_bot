@@ -12,6 +12,7 @@ from itertools import cycle
 load_dotenv() # Load dotenv to use .env file
 TOKEN = os.environ.get('TOKEN') # Get token from .env file
 database = sqlite3.connect('works.db') # Connect to database
+allowed_mentions = discord.AllowedMentions(everyone = True)
 
 def split(str):
   return [char for char in str]
@@ -58,9 +59,12 @@ async def check_all_for_update(channelId):
       work = AO3.Work(int(work_id))
       database.execute(f'UPDATE WORKS SET CHAPTER_COUNT={int(work.nchapters)} WHERE WORK_ID={int(work_id)}')
       database.commit()
-      await channel.send(f'Update found for { work.title }! You can read this fic over at: https://archiveofourown.org/works/{work_id}/')
+      await channel.send(content=f'@everyone \n Update found for { work.title }! You can read this fic over at: https://archiveofourown.org/works/{work_id}/', allowed_mentions = allowed_mentions)
     else:
       print(f'No update available for { work_id }...')  
+
+        
+  
 
 
 
@@ -139,6 +143,8 @@ async def fetch_work(ctx, work_id):
 async def extract_id(ctx, url):
   ctx.send(AO3.utils.workid_from_url(url))    
 
+
+# Help command with descriptions
 @client.command()
 async def cmd_help(ctx):
   embed = discord.Embed(title='Commands!', color=discord.Colour.from_rgb(153, 0, 0), description='')
@@ -150,11 +156,6 @@ async def cmd_help(ctx):
   embed.add_field(name='extract_id <url>', value='Extracts id from an AO3 url so it can be fetched later on.\n', inline=False)
   await ctx.send(embed=embed)
 
-@client.command()
-async def mention_test(ctx):
-  allowed_mentions = discord.AllowedMentions(everyone = True)
-  await ctx.send(content = "@everyone can i add text after this", allowed_mentions = allowed_mentions)  
-     
 
 @tasks.loop(minutes=5)
 async def change_status():
