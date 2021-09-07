@@ -153,7 +153,7 @@ async def cmd_help(ctx):
 @client.command()
 async def mention_test(ctx):
   allowed_mentions = discord.AllowedMentions(everyone = True)
-  await ctx.send(content = "@everyone", allowed_mentions = allowed_mentions)  
+  await ctx.send(content = "@everyone can i add text after this", allowed_mentions = allowed_mentions)  
      
 
 @tasks.loop(minutes=5)
