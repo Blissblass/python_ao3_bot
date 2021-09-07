@@ -138,6 +138,15 @@ async def fetch_work(ctx, work_id):
     await ctx.send(f"Title: {work.title}, Work ID: {work_id}, Chapters: {work.nchapters}")
   else:
     await ctx.send("Please enter only numbers for the Work ID!")
+
+@client.command()
+async def help(ctx):
+  embed = discord.Embed(title='Commands!', color='#990000', description="""
+  get_channel_id: Gets the current channels id!
+  get_all_works: Gets all the works added to the database
+  fetch_work: Fetches work directly from AO3, used to check work manually in case an update task fails 
+  """)
+  await ctx.send(embed=embed)
      
 
 @tasks.loop(minutes=5)
