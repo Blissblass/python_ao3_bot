@@ -141,7 +141,7 @@ async def fetch_work(ctx, work_id):
 
 @client.command()
 async def extract_id(ctx, url):
-  ctx.send(AO3.utils.workid_from_url(url))    
+  await ctx.send(AO3.utils.workid_from_url(url))    
 
 
 # Help command with descriptions
