@@ -159,6 +159,9 @@ async def extract_id(ctx, url):
 
 @client.command()
 async def remove_work(ctx, work_id):
+  if not exists(work_id):
+    return await ctx.send(f"<@{ctx.author.id}>, {work_id} is not saved to the database and therefore cannot be removed! Please try again :(")
+  
   cur = database.cursor()
   cur.execute(f"DELETE FROM WORKS WHERE work_id={work_id}")
   database.commit()
