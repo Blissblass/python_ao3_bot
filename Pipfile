@@ -8,7 +8,7 @@ discord.py = "*"
 ao3_api = "*"
 python-dotenv = "*"
 gunicorn = "*"
-pyscopg2 = "*"
+psycopg2 = "*"
 
 
 [dev-packages]
