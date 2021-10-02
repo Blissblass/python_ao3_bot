@@ -159,15 +159,15 @@ async def extract_id(ctx, url):
 
 @client.command()
 async def remove_work(ctx, work_id):
-  if not exists(work_id):
-    return await ctx.send(f"<@{ctx.author.id}>, {work_id} is not saved to the database and therefore cannot be removed! Please try again :(")
+  if exists(work_id):
+   cur = database.cursor()
+   cur.execute(f"DELETE FROM WORKS WHERE work_id={work_id}")
+   database.commit()
+   await ctx.channel.trigger_typing()
+   work = AO3.Work(work_id)
+   return await ctx.send(f"Removed work titled {work.title}!")
   
-  cur = database.cursor()
-  cur.execute(f"DELETE FROM WORKS WHERE work_id={work_id}")
-  database.commit()
-  await ctx.channel.trigger_typing()
-  work = AO3.Work(work_id)
-  await ctx.send(f"Removed work titled {work.title}!")
+  await ctx.send(f"<@{ctx.author.id}>, {work_id} is not saved to the database and therefore cannot be removed! Please try again :(") 
 
 # Help command with descriptions
 @client.command()
