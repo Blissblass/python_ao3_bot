@@ -51,6 +51,10 @@ async def check_all_for_update(channelId):
   cur.execute('SELECT WORK_ID FROM WORKS')
   work_req = cur.fetchall()
 
+  if len(work_req) <= 0:
+    return print("Database empty...")
+    
+
   for work in work_req:
     work_id = work[0]
     if has_update(work_id):
