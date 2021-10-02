@@ -1,21 +1,18 @@
 import AO3
-import sqlite3
 import psycopg2
 import discord
 from discord.ext import commands, tasks
 from dotenv import load_dotenv
 import os
-import re
 from itertools import cycle
 
 # -- SETUP --
 
 load_dotenv() # Load dotenv to use .env file
 TOKEN = os.environ.get('TOKEN') # Get token from .env file
-# USERNAME = os.environ.get('USERNAME')
-# PASSWORD = os.environ.get('PASSWORD')
-# database = sqlite3.connect('works.db') # Connect to database (OLD SQLITE DATABASE)
-database = psycopg2.connect(f"dbname=ao3_bot user=lily password=147258369")
+USERNAME = os.environ.get('USERNAME')
+PASSWORD = os.environ.get('PASSWORD')
+database = psycopg2.connect(f"dbname=ao3_bot user={USERNAME} password={PASSWORD}")
 
 allowed_mentions = discord.AllowedMentions(everyone = True) # Allows the bot to mention people
 
@@ -59,7 +56,7 @@ async def check_all_for_update(channelId):
       channel = client.get_channel(channelId)
       work = AO3.Work(work_id)
       cur = database.cursor()
-      cur.execute(f'UPDATE WORKS SET CHAPTER_COUNT={work.nchapters} WHERE WORK_ID={work_id}')
+      cur.execute(f'UPDATE WORKS SET CHAPTERS={work.nchapters} WHERE WORK_ID={work_id}')
       database.commit()
       await channel.send(content=f'@everyone \n Update found for { work.title }! You can read this fic over at: https://archiveofourown.org/works/{work_id}/', allowed_mentions = allowed_mentions)
       cur.close()
@@ -183,8 +180,7 @@ async def change_status():
 
 @tasks.loop(minutes=5)
 async def check_update():
-  # channel = client.get_channel(882611380291776564)
-  await check_all_for_update(882611380291776564)
+  await check_all_for_update(888593386389508107)
 
 
 
