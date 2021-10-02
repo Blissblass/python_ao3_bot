@@ -135,6 +135,8 @@ async def get_all_works(ctx):
   cur.execute('SELECT * FROM WORKS')
   cl_req = cur.fetchall()
   works = ""
+  if len(cl_req) <= 0:
+    return await ctx.send("No works have been registered to the database yet!") 
 
   await ctx.channel.trigger_typing()
   for row in cl_req:
