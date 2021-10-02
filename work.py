@@ -12,7 +12,9 @@ load_dotenv() # Load dotenv to use .env file
 TOKEN = os.environ.get('TOKEN') # Get token from .env file
 USERNAME = os.environ.get('USERNAME')
 PASSWORD = os.environ.get('PASSWORD')
-database = psycopg2.connect(f"dbname=ao3_bot user={USERNAME} password={PASSWORD}")
+DATABASE_URL = os.environ.get('DATABASE_URL')
+# database = psycopg2.connect(f"dbname=ao3_bot user={USERNAME} password={PASSWORD}")
+database = psycopg2.connect(DATABASE_URL)
 
 allowed_mentions = discord.AllowedMentions(everyone = True) # Allows the bot to mention people
 
