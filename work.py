@@ -21,12 +21,8 @@ allowed_mentions = discord.AllowedMentions(everyone = True) # Allows the bot to 
 def split(str):
   return [char for char in str]
 
-def valid_url(arr):
-  result = 0
-  for char in arr:
-    if char == '/':
-      result += 1
-  return result == 6   
+def valid_id(id):
+  len()
 
 def exists(workId):
   cur = database.cursor()
@@ -110,10 +106,9 @@ async def exit(ctx):
   await client.close()
 
 @client.command()
-async def add_work(ctx, url):
+async def add_work(ctx, workID):
   await ctx.channel.trigger_typing()
-  if valid_url(split(url)) and url.startswith('https'):
-    workID = AO3.utils.workid_from_url(url)
+  try:
     work = AO3.Work(workID)
     if exists(workID):
       await ctx.send(f'Work named {work.title} already exists!')  
@@ -123,6 +118,8 @@ async def add_work(ctx, url):
       database.commit()
       await ctx.send(f'Work {work.title} has been saved!')
       cur.close()
+  except:
+    await ctx.send(f"{workID} is not a valid ID! :( Please try again!")    
 
 @client.command()
 async def get_channel_id(ctx):
