@@ -119,7 +119,7 @@ async def add_work(ctx, workID):
       await ctx.send(f'Work named {work.title} has been saved!')
       cur.close()
   except:
-    await ctx.send(content=f"@{ctx.author}, {workID} is not a valid ID! :( Please try again!", allowed_mentions = allowed_mentions)    
+    await ctx.send(content=f"@{ctx.author.id}, {workID} is not a valid ID! :( Please try again!", allowed_mentions = allowed_mentions)    
 
 @client.command()
 async def get_channel_id(ctx):
