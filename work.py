@@ -25,11 +25,14 @@ def valid_id(id):
   len()
 
 def exists(workId):
-  cur = database.cursor()
-  cur.execute(f'SELECT WORK_ID FROM WORKS WHERE WORK_ID = { workId }')
-  result = cur.fetchone()
-  cur.close()
-  return result != None
+  try:
+    cur = database.cursor()
+    cur.execute(f'SELECT WORK_ID FROM WORKS WHERE WORK_ID = { workId }')
+    result = cur.fetchone()
+    cur.close()
+    return result != None
+  except: 
+    return False  
 
 
 def has_update(workId):
