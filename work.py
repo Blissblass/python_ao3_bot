@@ -116,10 +116,10 @@ async def add_work(ctx, workID):
       cur = database.cursor()
       cur.execute(f'INSERT INTO WORKS(WORK_ID, CHAPTERS) VALUES ({workID}, {work.nchapters})')
       database.commit()
-      await ctx.send(f'Work {work.title} has been saved!')
+      await ctx.send(f'Work named {work.title} has been saved!')
       cur.close()
   except:
-    await ctx.send(f"{workID} is not a valid ID! :( Please try again!")    
+    await ctx.send(content=f"@{ctx.author}, {workID} is not a valid ID! :( Please try again!", allowed_mentions = allowed_mentions)    
 
 @client.command()
 async def get_channel_id(ctx):
@@ -154,7 +154,8 @@ async def fetch_work(ctx, work_id):
 @client.command()
 async def extract_id(ctx, url):
   await ctx.channel.trigger_typing()
-  await ctx.send(AO3.utils.workid_from_url(url))    
+  work_id = AO3.utils.workid_from_url(url)
+  await ctx.send(f"Your extracted work_id is: {work_id}")    
 
 @client.command()
 async def remove_work(ctx, work_id):
@@ -173,7 +174,7 @@ async def cmd_help(ctx):
   embed.add_field(name='get_channel_id', value='Gets the current channels id!\n', inline=False)
   embed.add_field(name='get_all_works', value='Gets all the works previously added to the database.\n', inline=False)
   embed.add_field(name='fetch_work <work_id>', value='Fetches work directly from AO3, used to check work manually in case an update task fails. Meaning you can also fetch works that arent in the database.\n', inline=False)
-  embed.add_field(name='add_work <url>', value='Adds a work to the database so it can be periodically checked for updates.\n', inline=False)
+  embed.add_field(name='add_work <work_id>', value='Adds a work to the database so it can be periodically checked for updates. (Please use extrac_id command to get your work_id)\n', inline=False)
   embed.add_field(name='remove_work <work_id>', value='Removes work from database.\n', inline=False)
   embed.add_field(name='extract_id <url>', value='Extracts id from an AO3 url so it can be fetched later on.\n', inline=False)
   await ctx.send(embed=embed)
