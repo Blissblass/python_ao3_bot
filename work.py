@@ -31,7 +31,8 @@ def exists(workId):
     result = cur.fetchone()
     cur.close()
     return result != None
-  except: 
+  except:
+    database.rollback() 
     return False  
 
 
