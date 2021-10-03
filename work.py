@@ -79,11 +79,13 @@ work = AO3.Work(workid) # Initiate a new Work class with the Work ID
 client = commands.Bot(command_prefix='!', help_command=None)
 status = cycle([
   'Keeping fandoms alive 24/7', 
-  'We promise to keep it SFW (we wont)', 
-  'Now 50% more gayer',
-  'If you guys add Jesus x Judas to the list im gonna gain sentience and hunt you down',
-  'hi honey ily',
-  '50% more smut'
+  'Use !help to see all available commands!',
+  'We promise to keep it SFW (we wont)',  
+  'Use !help to see all available commands!',
+  'Now 50% more gayer!', 
+  'Use !help to see all available commands!',
+  'If you guys add Jesus x Judas to the list im gonna gain sentience and hunt you down', 
+  'Use !help to see all available commands!'
   ])
 
 
@@ -134,7 +136,7 @@ async def get_all_works(ctx):
 
   await ctx.channel.trigger_typing()
   for row in cl_req:
-    works += f'Title: {AO3.Work(row[1]).title}, ID: {row[1]}, Chapters: {row[2]}\n'
+    works += f'Title: {AO3.Work(row[1]).title}, ID: {row[1]}, Chapters: {row[2]} Channel: <#{row[4]}>\n'
 
   await ctx.send(works)  
   cur.close()  
