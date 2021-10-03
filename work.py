@@ -136,7 +136,7 @@ async def get_all_works(ctx):
 
   await ctx.channel.trigger_typing()
   for row in cl_req:
-    works += f'Title: {AO3.Work(row[1]).title}, ID: {row[1]}, Chapters: {row[2]} Channel: <#{row[4]}>\n'
+    works += f'Title: {AO3.Work(row[1]).title}, ID: {row[1]}, Chapters: {row[2]}>' + (f'Channel: <#{row[4]}' if client.get_channel(row[4]) != None else 'Channel: [CHANNEL EXISTS IN ANOTHER SERVER]')
 
   await ctx.send(works)  
   cur.close()  
