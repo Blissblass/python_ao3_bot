@@ -99,7 +99,7 @@ async def on_ready():
 
 @client.command() 
 async def ping(ctx):
-  await ctx.send(f'Pong! ({ctx.guild.id}, {ctx.channel.id}, {ctx.author.id})')
+  await ctx.send(f'Pong! ({ctx.guild.id} | {type(ctx.guild.id)}, {ctx.channel.id} | {type(ctx.channel.id)}, {ctx.author.id} | {type(ctx.author.id)})')
 
 @client.command()
 async def exit(ctx):
