@@ -76,7 +76,7 @@ work = AO3.Work(workid) # Initiate a new Work class with the Work ID
 # -----------------------------------------------
 
 # Discord setup
-client = commands.Bot(command_prefix='!')
+client = commands.Bot(command_prefix='!', help_command=None)
 status = cycle([
   'Keeping fandoms alive 24/7', 
   'We promise to keep it SFW (we wont)', 
@@ -184,7 +184,7 @@ async def change_notif_channel(ctx, workId=None):
 
 # Help command with descriptions
 @client.command()
-async def cmd_help(ctx):
+async def help(ctx):
   embed = discord.Embed(title='Commands!', color=discord.Colour.from_rgb(153, 0, 0), description='')
 
   embed.add_field(name='get_channel_id', value='Gets the current channels id!\n', inline=False)
