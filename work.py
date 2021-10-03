@@ -110,19 +110,19 @@ async def exit(ctx):
 @client.command()
 async def add_work(ctx, workID):
   await ctx.channel.trigger_typing()
-  try:
-    work = AO3.Work(int(workID))
-    if exists(workID):
-      await ctx.send(f'Work named {work.title} already exists!')  
-    else:
-      cur = database.cursor()
-      cur.execute(f'INSERT INTO WORKS(WORK_ID, CHAPTERS, SERVER_ID, CHANNEL_ID, USER_ID) VALUES ({workID}, {work.nchapters}, {ctx.guild.id}, {ctx.channel.id}, {ctx.author.id})')
-      database.commit()
-      await ctx.send(f'Work named {work.title} has been saved!')
-      cur.close()
-  except:
-    database.rollback()
-    await ctx.send(content=f"<@{ctx.author.id}>, {workID} is not a valid ID! :( Please try again!", allowed_mentions = allowed_mentions)    
+  # try:
+  work = AO3.Work(int(workID))
+  if exists(workID):
+    await ctx.send(f'Work named {work.title} already exists!')  
+  else:
+    cur = database.cursor()
+    cur.execute(f'INSERT INTO WORKS(WORK_ID, CHAPTERS, SERVER_ID, CHANNEL_ID, USER_ID) VALUES ({workID}, {work.nchapters}, {ctx.guild.id}, {ctx.channel.id}, {ctx.author.id})')
+    database.commit()
+    await ctx.send(f'Work named {work.title} has been saved!')
+    cur.close()
+  # except:
+  #   database.rollback()
+  #   await ctx.send(content=f"<@{ctx.author.id}>, {workID} is not a valid ID! :( Please try again!", allowed_mentions = allowed_mentions)    
 
 @client.command()
 async def get_channel_id(ctx):
