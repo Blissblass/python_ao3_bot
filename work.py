@@ -204,7 +204,7 @@ async def get_all_works_paginated(ctx):
     cur_embed = discord.Embed(color=discord.Colour.from_rgb(153, 0, 0), title=work.title)
     cur_embed.add_field(name="Summary:", value=work.summary, inline=False)
     cur_embed.add_field(name="Details:", inline=False, value=f"**ID:** {row[1]}, **Chapters:** {row[2]}" + (f' **Channel**: <#{row[4]}>\n' if client.get_channel(row[4]) != None else ' **Channel:** <:x:894298558814109788>\n'))
-    cur_embed.set_footer(text=f"Read this fic at: https://archiveofourown.org/works/{row[1]}/", inline=False)
+    cur_embed.set_footer(text=f"Read this fic at: https://archiveofourown.org/works/{row[1]}/")
     cur_embed.set_thumbnail(url="https://i.imgur.com/q0MqhAe.jpg")
     embeds.append(cur_embed)
   await paginator.run(embeds)  
