@@ -136,9 +136,9 @@ async def get_all_works(ctx):
 
   await ctx.channel.trigger_typing()
   for row in cl_req:
-    works += f'Title: {AO3.Work(row[1]).title}, ID: {row[1]}, Chapters: {row[2]}' + (f' Channel: <#{row[4]}\n' if client.get_channel(row[4]) != None else ' Channel: <:x:894298558814109788>\n')
+    works += f'\nTitle: {AO3.Work(row[1]).title}, ID: {row[1]}, Chapters: {row[2]}' + (f' Channel: <#{row[4]}\n' if client.get_channel(row[4]) != None else ' Channel: <:x:894298558814109788>\n')
 
-  await ctx.send(f"<@{ctx.author.id}>, here's your saved works!\n {works}")  
+  await ctx.send(f"**<@{ctx.author.id}>, here's your saved works!**\n {works}")  
   cur.close()  
 
 @client.command()
