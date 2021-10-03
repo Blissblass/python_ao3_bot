@@ -199,6 +199,29 @@ async def pagination_test(ctx):
   embeds = [embed1, embed2, embed3]
   await paginator.run(embeds)
 
+@client.command()
+async def get_all_works_paginated(ctx):
+  cur = database.cursor()
+  cur.execute(f'SELECT * FROM WORKS WHERE user_id = {ctx.author.id}')
+  cl_req = cur.fetchall()
+  cur.close()    
+  if len(cl_req) <= 0:
+    return await ctx.send(f"<@{ctx.author.id}>, you haven't saved any works yet!") 
+  embeds = []
+  paginator = DiscordUtils.Pagination.CustomEmbedPaginator(ctx, remove_reactions=True)
+  paginator.add_reaction('⏮️', "first")
+  paginator.add_reaction('⏪', "back")
+  paginator.add_reaction('⏩', "next")
+  paginator.add_reaction('⏭️', "last")
+
+  await ctx.channel.trigger_typing()
+  for row in cl_req:
+    # works += f'\nTitle: {AO3.Work(row[1]).title}, ID: {row[1]}, Chapters: {row[2]}' + (f' Channel: <#{row[4]}>\n' if client.get_channel(row[4]) != None else ' Channel: <:x:894298558814109788>\n')
+    embeds.append(discord.Embed(color=discord.Colour.from_rgb(153, 0, 0), title=row[1]))
+  # await ctx.send(f"**<@{ctx.author.id}>, here's your saved works!**\n {works}")
+  await paginator.run(embeds)  
+  
+
 
 # Help command with descriptions
 @client.command()
