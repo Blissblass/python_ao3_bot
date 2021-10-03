@@ -2,6 +2,7 @@ import AO3
 import psycopg2
 import discord
 from discord.ext import commands, tasks
+import DiscordUtils
 from dotenv import load_dotenv
 import os
 from itertools import cycle
@@ -136,7 +137,7 @@ async def get_all_works(ctx):
 
   await ctx.channel.trigger_typing()
   for row in cl_req:
-    works += f'\nTitle: {AO3.Work(row[1]).title}, ID: {row[1]}, Chapters: {row[2]}' + (f' Channel: <#{row[4]}\n' if client.get_channel(row[4]) != None else ' Channel: <:x:894298558814109788>\n')
+    works += f'\nTitle: {AO3.Work(row[1]).title}, ID: {row[1]}, Chapters: {row[2]}' + (f' Channel: <#{row[4]}>\n' if client.get_channel(row[4]) != None else ' Channel: <:x:894298558814109788>\n')
 
   await ctx.send(f"**<@{ctx.author.id}>, here's your saved works!**\n {works}")  
   cur.close()  
@@ -183,6 +184,21 @@ async def change_notif_channel(ctx, workId=None):
     cur.close()
     work = AO3.Work(workId)
     await ctx.send(f"<@{ctx.author.id}>, work titled {work.title} has been updated to ping in <#{ctx.channel.id}>!")
+
+@client.command()
+async def pagination_test(self, ctx):
+  embed1 = discord.Embed(color=ctx.author.color).add_field(name="Example", value="Page 1")
+  embed2 = discord.Embed(color=ctx.author.color).add_field(name="Example", value="Page 2")
+  embed3 = discord.Embed(color=ctx.author.color).add_field(name="Example", value="Page 3")
+  paginator = DiscordUtils.Pagination.CustomEmbedPaginator(ctx, remove_reactions=True)
+  paginator.add_reaction('⏮️', "first")
+  paginator.add_reaction('⏪', "back")
+  paginator.add_reaction('🔐', "lock")
+  paginator.add_reaction('⏩', "next")
+  paginator.add_reaction('⏭️', "last")
+  embeds = [embed1, embed2, embed3]
+  await paginator.run(embeds)
+
 
 # Help command with descriptions
 @client.command()
