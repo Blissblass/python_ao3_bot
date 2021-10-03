@@ -217,7 +217,10 @@ async def get_all_works_paginated(ctx):
   await ctx.channel.trigger_typing()
   for row in cl_req:
     # works += f'\nTitle: {AO3.Work(row[1]).title}, ID: {row[1]}, Chapters: {row[2]}' + (f' Channel: <#{row[4]}>\n' if client.get_channel(row[4]) != None else ' Channel: <:x:894298558814109788>\n')
-    embeds.append(discord.Embed(color=discord.Colour.from_rgb(153, 0, 0), title=row[1]))
+    work = AO3.Work(row[1])
+    cur_embed = discord.Embed(color=discord.Colour.from_rgb(153, 0, 0), title=work.title)
+    cur_embed.add_field(name="Summary:", value={work.summary})
+    embeds.append(cur_embed)
   # await ctx.send(f"**<@{ctx.author.id}>, here's your saved works!**\n {works}")
   await paginator.run(embeds)  
   
