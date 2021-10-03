@@ -21,9 +21,6 @@ allowed_mentions = discord.AllowedMentions(everyone = True) # Allows the bot to 
 def split(str):
   return [char for char in str]
 
-def valid_id(id):
-  len()
-
 def exists(workId):
   try:
     cur = database.cursor()
@@ -46,9 +43,9 @@ def has_update(workId):
   cur.close()
   return saved_nchapters < newWork_nchapters
 
-async def check_all_for_update(channelId):
+async def check_all_for_update():
   cur = database.cursor()
-  cur.execute('SELECT WORK_ID FROM WORKS')
+  cur.execute('SELECT WORK_ID, CHANNEL_ID FROM WORKS')
   work_req = cur.fetchall()
 
   if len(work_req) <= 0:
@@ -57,9 +54,10 @@ async def check_all_for_update(channelId):
 
   for work in work_req:
     work_id = work[0]
+    channel_id = work[1]
     if has_update(work_id):
       print('Update found!')
-      channel = client.get_channel(channelId)
+      channel = client.get_channel(channel_id)
       work = AO3.Work(work_id)
       cur = database.cursor()
       cur.execute(f'UPDATE WORKS SET CHAPTERS={work.nchapters} WHERE WORK_ID={work_id}')
@@ -118,7 +116,7 @@ async def add_work(ctx, workID):
       await ctx.send(f'Work named {work.title} already exists!')  
     else:
       cur = database.cursor()
-      cur.execute(f'INSERT INTO WORKS(WORK_ID, CHAPTERS) VALUES ({workID}, {work.nchapters})')
+      cur.execute(f'INSERT INTO WORKS(WORK_ID, CHAPTERS, SERVER_ID, CHANNEL_ID, USER_ID) VALUES ({workID}, {work.nchapters}, {ctx.guild.id}, {ctx.channel.id}, {ctx.author.id})')
       database.commit()
       await ctx.send(f'Work named {work.title} has been saved!')
       cur.close()
@@ -151,15 +149,15 @@ async def fetch_work(ctx, work_id):
   await ctx.channel.trigger_typing()
   if type(int(work_id)) is int and len(work_id) > 0:
     work = AO3.Work(work_id)
-    await ctx.send(f"Title: {work.title}, Work ID: {work_id}, Chapters: {work.nchapters}")
+    await ctx.send(f"<@{ctx.author.id}>, here's your requested work: \n Title: {work.title}, Work ID: {work_id}, Chapters: {work.nchapters}")
   else:
-    await ctx.send("Please enter only numbers for the Work ID!")
+    await ctx.send(f"<@{ctx.author.id}>, Please enter only numbers for the Work ID!")
 
 @client.command()
 async def extract_id(ctx, url):
   await ctx.channel.trigger_typing()
   work_id = AO3.utils.workid_from_url(url)
-  await ctx.send(f"Your extracted work_id is: {work_id}")    
+  await ctx.send(f"<@{ctx.author.id}>, Your extracted work_id is: {work_id}")    
 
 @client.command()
 async def remove_work(ctx, work_id):
@@ -171,7 +169,23 @@ async def remove_work(ctx, work_id):
    work = AO3.Work(work_id)
    return await ctx.send(f"Removed work titled {work.title}!")
   
-  await ctx.send(f"<@{ctx.author.id}>, {work_id} is not saved to the database and therefore cannot be removed! Please try again :(") 
+  await ctx.send(f"<@{ctx.author.id}>, {work_id} is not saved to the database and therefore cannot be removed! Please try again :(")
+
+@client.command()
+async def change_notif_channel(ctx, workId=None):
+  if workId == None:
+     cur = database.cursor()
+     cur.execute(f"UPDATE WORKS SET channel_id = {ctx.channel.id} WHERE user_id = {ctx.author.id}")
+     database.commit()
+     cur.close()
+     await ctx.send(f"All works updated for <@{ctx.author.id}>! Now all updates for you will be pinged in <#{ctx.channel.id}>!")
+  else:
+    cur = database.cursor()
+    cur.execute(f"UPDATE WORKS SET channel_id = {ctx.channel.id} WHERE work_id = {workId}")
+    database.commit()
+    cur.close()
+    work = AO3.Work(workId)
+    await ctx.send(f"<@{ctx.author.id}>, work titled {work.title} has been updated to ping in <#{ctx.channel.id}>!")
 
 # Help command with descriptions
 @client.command()
@@ -181,9 +195,10 @@ async def cmd_help(ctx):
   embed.add_field(name='get_channel_id', value='Gets the current channels id!\n', inline=False)
   embed.add_field(name='get_all_works', value='Gets all the works previously added to the database.\n', inline=False)
   embed.add_field(name='fetch_work <work_id>', value='Fetches work directly from AO3, used to check work manually in case an update task fails. Meaning you can also fetch works that arent in the database.\n', inline=False)
-  embed.add_field(name='add_work <work_id>', value='Adds a work to the database so it can be periodically checked for updates. (Please use extrac_id command to get your work_id)\n', inline=False)
+  embed.add_field(name='add_work <work_id>', value='Adds a work to the database so it can be periodically checked for updates. (Please use extract_id command to get your work_id)\n', inline=False)
   embed.add_field(name='remove_work <work_id>', value='Removes work from database.\n', inline=False)
   embed.add_field(name='extract_id <url>', value='Extracts id from an AO3 url so it can be fetched later on.\n', inline=False)
+  embed.add_field(name="change_notif_channel <work_id *optional*>", value="Changes the notif channel for a work || Changes the notification channel for all of your works if an id isn't given!")
   await ctx.send(embed=embed)
 
 
@@ -193,7 +208,7 @@ async def change_status():
 
 @tasks.loop(minutes=5)
 async def check_update():
-  await check_all_for_update(888593386389508107)
+  await check_all_for_update()
 
 
 
