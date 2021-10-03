@@ -111,7 +111,7 @@ async def exit(ctx):
 async def add_work(ctx, workID):
   await ctx.channel.trigger_typing()
   try:
-    work = AO3.Work(workID)
+    work = AO3.Work(int(workID))
     if exists(workID):
       await ctx.send(f'Work named {work.title} already exists!')  
     else:
