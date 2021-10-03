@@ -102,27 +102,21 @@ async def ping(ctx):
   await ctx.send(f'Pong! ({ctx.guild.id} | {type(ctx.guild.id)}, {ctx.channel.id} | {type(ctx.channel.id)}, {ctx.author.id} | {type(ctx.author.id)})')
 
 @client.command()
-async def exit(ctx):
-  await ctx.send("Logging out...")
-  await ctx.send("*(Bot will appear online for a few minutes)*")
-  await client.close()
-
-@client.command()
 async def add_work(ctx, workID):
   await ctx.channel.trigger_typing()
-  # try:
-  work = AO3.Work(int(workID))
-  if exists(workID):
-    await ctx.send(f'Work named {work.title} already exists!')  
-  else:
-    cur = database.cursor()
-    cur.execute(f'INSERT INTO WORKS(WORK_ID, CHAPTERS, SERVER_ID, CHANNEL_ID, USER_ID) VALUES ({workID}, {work.nchapters}, {ctx.guild.id}, {ctx.channel.id}, {ctx.author.id})')
-    database.commit()
-    await ctx.send(f'Work named {work.title} has been saved!')
-    cur.close()
-  # except:
-  #   database.rollback()
-  #   await ctx.send(content=f"<@{ctx.author.id}>, {workID} is not a valid ID! :( Please try again!", allowed_mentions = allowed_mentions)    
+  try:
+   work = AO3.Work(int(workID))
+   if exists(workID):
+     await ctx.send(f'Work named {work.title} already exists!')  
+   else:
+     cur = database.cursor()
+     cur.execute(f'INSERT INTO WORKS(WORK_ID, CHAPTERS, SERVER_ID, CHANNEL_ID, USER_ID) VALUES ({workID}, {work.nchapters}, {ctx.guild.id}, {ctx.channel.id}, {ctx.author.id})')
+     database.commit()
+     await ctx.send(f'Work named {work.title} has been saved!')
+     cur.close()
+  except:
+    database.rollback()
+    await ctx.send(content=f"<@{ctx.author.id}>, {workID} is not a valid ID! :( Please try again!", allowed_mentions = allowed_mentions)    
 
 @client.command()
 async def get_channel_id(ctx):
@@ -132,7 +126,7 @@ async def get_channel_id(ctx):
 @client.command()
 async def get_all_works(ctx):
   cur = database.cursor()
-  cur.execute('SELECT * FROM WORKS')
+  cur.execute(f'SELECT * FROM WORKS WHERE user_id = {ctx.author.id}')
   cl_req = cur.fetchall()
   works = ""
   if len(cl_req) <= 0:
