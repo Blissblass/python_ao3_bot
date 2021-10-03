@@ -127,22 +127,6 @@ async def get_channel_id(ctx):
   await ctx.send(ctx.channel.id)     
 
 @client.command()
-async def get_all_works(ctx):
-  cur = database.cursor()
-  cur.execute(f'SELECT * FROM WORKS WHERE user_id = {ctx.author.id}')
-  cl_req = cur.fetchall()
-  works = ""
-  if len(cl_req) <= 0:
-    return await ctx.send(f"<@{ctx.author.id}>, you haven't saved any works yet!") 
-
-  await ctx.channel.trigger_typing()
-  for row in cl_req:
-    works += f'\nTitle: {AO3.Work(row[1]).title}, ID: {row[1]}, Chapters: {row[2]}' + (f' Channel: <#{row[4]}>\n' if client.get_channel(row[4]) != None else ' Channel: <:x:894298558814109788>\n')
-
-  await ctx.send(f"**<@{ctx.author.id}>, here's your saved works!**\n {works}")  
-  cur.close()  
-
-@client.command()
 async def fetch_work(ctx, work_id):
   await ctx.channel.trigger_typing()
   if type(int(work_id)) is int and len(work_id) > 0:
@@ -221,7 +205,7 @@ async def get_all_works_paginated(ctx):
     cur_embed.add_field(name="Summary:", value=work.summary, inline=False)
     cur_embed.add_field(name="Details:", inline=False, value=f"ID: {row[1]}, Chapters: {row[2]}" + (f' Channel: <#{row[4]}>\n' if client.get_channel(row[4]) != None else ' Channel: <:x:894298558814109788>\n'))
     cur_embed.add_field(name="URL:", value=f"Read this fic at: https://archiveofourown.org/works/{row[1]}", inline=False)
-    cur_embed.set_thumbnail("https://i.imgur.com/q0MqhAe.jpg")
+    cur_embed.set_thumbnail(url="https://i.imgur.com/q0MqhAe.jpg")
     embeds.append(cur_embed)
   await paginator.run(embeds)  
   
