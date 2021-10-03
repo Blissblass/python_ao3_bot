@@ -170,21 +170,7 @@ async def change_notif_channel(ctx, workId=None):
     await ctx.send(f"<@{ctx.author.id}>, work titled {work.title} has been updated to ping in <#{ctx.channel.id}>!")
 
 @client.command()
-async def pagination_test(ctx):
-  embed1 = discord.Embed(color=ctx.author.color).add_field(name="Example", value="Page 1")
-  embed2 = discord.Embed(color=ctx.author.color).add_field(name="Example", value="Page 2")
-  embed3 = discord.Embed(color=ctx.author.color).add_field(name="Example", value="Page 3")
-  paginator = DiscordUtils.Pagination.CustomEmbedPaginator(ctx)
-  paginator.add_reaction('⏮️', "first")
-  paginator.add_reaction('⏪', "back")
-  paginator.add_reaction('🔐', "lock")
-  paginator.add_reaction('⏩', "next")
-  paginator.add_reaction('⏭️', "last")
-  embeds = [embed1, embed2, embed3]
-  await paginator.run(embeds)
-
-@client.command()
-async def get_all_works_paginated(ctx):
+async def get_all_works(ctx):
   cur = database.cursor()
   cur.execute(f'SELECT * FROM WORKS WHERE user_id = {ctx.author.id}')
   cl_req = cur.fetchall()
@@ -192,7 +178,7 @@ async def get_all_works_paginated(ctx):
   if len(cl_req) <= 0:
     return await ctx.send(f"<@{ctx.author.id}>, you haven't saved any works yet!") 
   embeds = []
-  paginator = DiscordUtils.Pagination.CustomEmbedPaginator(ctx)
+  paginator = DiscordUtils.Pagination.CustomEmbedPaginator(ctx, remove_reactions=True)
   paginator.add_reaction('⏮️', "first")
   paginator.add_reaction('⏪', "back")
   paginator.add_reaction('⏩', "next")
