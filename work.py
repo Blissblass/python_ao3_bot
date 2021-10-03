@@ -99,7 +99,7 @@ async def on_ready():
 
 @client.command() 
 async def ping(ctx):
-  await ctx.send('Pong!')
+  await ctx.send(f'Pong! ({ctx.guild.id}, {ctx.channel.id}, {ctx.author.id})')
 
 @client.command()
 async def exit(ctx):
@@ -121,6 +121,7 @@ async def add_work(ctx, workID):
       await ctx.send(f'Work named {work.title} has been saved!')
       cur.close()
   except:
+    database.rollback()
     await ctx.send(content=f"<@{ctx.author.id}>, {workID} is not a valid ID! :( Please try again!", allowed_mentions = allowed_mentions)    
 
 @client.command()
