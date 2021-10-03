@@ -130,7 +130,7 @@ async def get_all_works(ctx):
   cl_req = cur.fetchall()
   works = ""
   if len(cl_req) <= 0:
-    return await ctx.send("No works have been registered to the database yet!") 
+    return await ctx.send(f"<@{ctx.author.id}>, you haven't saved any works yet!") 
 
   await ctx.channel.trigger_typing()
   for row in cl_req:
