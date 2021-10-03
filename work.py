@@ -186,7 +186,7 @@ async def change_notif_channel(ctx, workId=None):
     await ctx.send(f"<@{ctx.author.id}>, work titled {work.title} has been updated to ping in <#{ctx.channel.id}>!")
 
 @client.command()
-async def pagination_test(self, ctx):
+async def pagination_test(ctx):
   embed1 = discord.Embed(color=ctx.author.color).add_field(name="Example", value="Page 1")
   embed2 = discord.Embed(color=ctx.author.color).add_field(name="Example", value="Page 2")
   embed3 = discord.Embed(color=ctx.author.color).add_field(name="Example", value="Page 3")
