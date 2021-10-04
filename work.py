@@ -85,7 +85,6 @@ status = cycle([
   'Use !help to see all available commands!',
   'Now 50% more gayer!', 
   'Use !help to see all available commands!',
-  'If you guys add Jesus x Judas to the list im gonna gain sentience and hunt you down', 
   'Use !help to see all available commands!'
   ])
 
@@ -131,7 +130,13 @@ async def fetch_work(ctx, work_id):
   await ctx.channel.trigger_typing()
   if type(int(work_id)) is int and len(work_id) > 0:
     work = AO3.Work(work_id)
-    await ctx.send(f"<@{ctx.author.id}>, here's your requested work: \n Title: {work.title}, Work ID: {work_id}, Chapters: {work.nchapters}")
+    await ctx.channel.trigger_typing()
+    cur_embed = discord.Embed(color=discord.Colour.from_rgb(153, 0, 0), title=work.title)
+    cur_embed.add_field(name="Summary:", value=work.summary, inline=False)
+    cur_embed.add_field(name="Details:", inline=False, value=f"**ID:** {work_id}, **Chapters:** {work.nchapters}")
+    cur_embed.add_field(name="URL:", value=f"Read this fic at: https://archiveofourown.org/works/{work.id}/", inline=False)
+    cur_embed.set_thumbnail(url="https://i.imgur.com/q0MqhAe.jpg")
+    await ctx.send(f"<@{ctx.author.id}>, here's the work you requested! {cur_embed}")
   else:
     await ctx.send(f"<@{ctx.author.id}>, Please enter only numbers for the Work ID!")
 
@@ -193,7 +198,8 @@ async def get_all_works(ctx):
     cur_embed.add_field(name="URL:", value=f"Read this fic at: https://archiveofourown.org/works/{row[1]}/", inline=False)
     cur_embed.set_thumbnail(url="https://i.imgur.com/q0MqhAe.jpg")
     embeds.append(cur_embed)
-  await paginator.run(embeds)  
+  
+  await ctx.send(f"<@{ctx.author.id}>, here's all of your saved works!\n{paginator.run(embeds)}" )  
   
 
 
