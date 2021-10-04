@@ -136,7 +136,8 @@ async def fetch_work(ctx, work_id):
     cur_embed.add_field(name="Details:", inline=False, value=f"**ID:** {work_id}, **Chapters:** {work.nchapters}")
     cur_embed.add_field(name="URL:", value=f"Read this fic at: https://archiveofourown.org/works/{work.id}/", inline=False)
     cur_embed.set_thumbnail(url="https://i.imgur.com/q0MqhAe.jpg")
-    await ctx.send(f"<@{ctx.author.id}>, here's the work you requested! {cur_embed}")
+    await ctx.send(f"<@{ctx.author.id}>, here's the work you requested!")
+    await ctx.send(cur_embed)
   else:
     await ctx.send(f"<@{ctx.author.id}>, Please enter only numbers for the Work ID!")
 
@@ -199,7 +200,8 @@ async def get_all_works(ctx):
     cur_embed.set_thumbnail(url="https://i.imgur.com/q0MqhAe.jpg")
     embeds.append(cur_embed)
   
-  await ctx.send(f"<@{ctx.author.id}>, here's all of your saved works!\n{paginator.run(embeds)}" )  
+  await ctx.send(f"<@{ctx.author.id}>, here's all of your saved works!" )
+  await paginator.run(embeds)  
   
 
 
