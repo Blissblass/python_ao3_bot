@@ -136,8 +136,7 @@ async def fetch_work(ctx, work_id):
     cur_embed.add_field(name="Details:", inline=False, value=f"**ID:** {work_id}, **Chapters:** {work.nchapters}")
     cur_embed.add_field(name="URL:", value=f"Read this fic at: https://archiveofourown.org/works/{work.id}/", inline=False)
     cur_embed.set_thumbnail(url="https://i.imgur.com/q0MqhAe.jpg")
-    await ctx.send(f"<@{ctx.author.id}>, here's the work you requested!")
-    await ctx.send(cur_embed)
+    await ctx.send(f"<@{ctx.author.id}>, here's the work you requested!", embed=cur_embed)
   else:
     await ctx.send(f"<@{ctx.author.id}>, Please enter only numbers for the Work ID!")
 
