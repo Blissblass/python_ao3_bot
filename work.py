@@ -205,7 +205,7 @@ async def get_all_works(ctx):
 @client.command()
 async def update_test(ctx, workId):
   work = AO3.Work(workId)
-  latest_chapter = work.chapters[work.nchapters]
+  latest_chapter = work.chapters[work.nchapters - 1]
   text = latest_chapter.text
   summary = ' '.join(text.split(" ")[:50])
 
