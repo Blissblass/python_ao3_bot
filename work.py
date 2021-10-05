@@ -90,9 +90,9 @@ async def check_all_for_update():
 # Discord setup
 client = commands.Bot(command_prefix='^', help_command=None)
 status = cycle([
-  'Keeping fandoms alive 24/7', 
+  'Keeping fandoms alive 24/7!', 
   'Use ^help to see all available commands!',
-  'We promise to keep it SFW (we wont)',  
+  'We promise to keep it SFW!',  
   'Use ^help to see all available commands!', 
   'Your secrets are safe with us!',
   'Use ^help to see all available commands!',
