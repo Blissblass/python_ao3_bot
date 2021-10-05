@@ -205,9 +205,10 @@ async def get_all_works(ctx):
 @client.command()
 async def update_test(ctx, workId):
   work = AO3.Work(workId)
-  latest_chapter = work.chapters[max(work.nchapters)]
+  latest_chapter = work.chapters[work.nchapters]
   text = latest_chapter.text
   summary = ' '.join(text.split(" ")[:50])
+
   embed = discord.Embed(color=discord.Colour.from_rgb(153, 0, 0), title=f"Update found for {work.title}!")
   embed.add_field(name=f"{latest_chapter.title}", value=summary)
 
