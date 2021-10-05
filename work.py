@@ -91,12 +91,12 @@ async def check_all_for_update():
 client = commands.Bot(command_prefix='^', help_command=None)
 status = cycle([
   'Keeping fandoms alive 24/7', 
-  'Use !help to see all available commands!',
+  'Use ^help to see all available commands!',
   'We promise to keep it SFW (we wont)',  
-  'Use !help to see all available commands!', 
+  'Use ^help to see all available commands!', 
   'Your secrets are safe with us!'
-  'Use !help to see all available commands!'
-  'Use !help to see all available commands!',
+  'Use ^help to see all available commands!'
+  'Use ^help to see all available commands!',
   ])
 
 
