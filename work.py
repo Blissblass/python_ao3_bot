@@ -70,8 +70,9 @@ async def check_all_for_update():
       summary = ' '.join(text.split(" ")[:100])
 
       embed = discord.Embed(color=discord.Colour.from_rgb(153, 0, 0), title=f"Update found for {work.title}!")
-      embed.add_field(name=f"{latest_chapter.title}", value=summary)
-      embed.add_field(name="URL", value=f"Read this fic over at https://archiveofourown.org/works/{work_id}/")
+      embed.add_field(name=f"{latest_chapter.title}", value=f"{summary}...", inline=False)
+      embed.add_field(name="URL", value=f"Read this fic over at https://archiveofourown.org/works/{work_id}/", inline=False)
+      embed.set_thumbnail(url="https://i.imgur.com/q0MqhAe.jpg")
 
       await channel.send(content=f'<@{user_id}> \n Update found for { work.title }!', embed = embed)
       cur.close()
