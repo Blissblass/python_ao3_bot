@@ -70,9 +70,9 @@ async def check_all_for_update():
  
 # AO3 setup 
 
-url = "https://archiveofourown.org/works/32593318/chapters/80849710" # Get sample work URL
-workid = AO3.utils.workid_from_url(url) # Extract Work ID
-work = AO3.Work(workid) # Initiate a new Work class with the Work ID
+# url = "https://archiveofourown.org/works/32593318/chapters/80849710" # Get sample work URL
+# workid = AO3.utils.workid_from_url(url) # Extract Work ID
+# work = AO3.Work(workid) # Initiate a new Work class with the Work ID
 
 # -----------------------------------------------
 
@@ -82,10 +82,10 @@ status = cycle([
   'Keeping fandoms alive 24/7', 
   'Use !help to see all available commands!',
   'We promise to keep it SFW (we wont)',  
-  'Use !help to see all available commands!',
-  'Now 50% more gayer!', 
-  'Use !help to see all available commands!',
+  'Use !help to see all available commands!', 
+  'Your secrets are safe with us!'
   'Use !help to see all available commands!'
+  'Use !help to see all available commands!',
   ])
 
 
@@ -199,7 +199,7 @@ async def get_all_works(ctx):
     cur_embed.set_thumbnail(url="https://i.imgur.com/q0MqhAe.jpg")
     embeds.append(cur_embed)
   
-  await ctx.send(f"<@{ctx.author.id}>, here's all of your saved works!" )
+  await ctx.send(f"<@{ctx.author.id}>, here's all of your saved works!", embed=cur_embed)
   await paginator.run(embeds)  
   
 
