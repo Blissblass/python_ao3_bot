@@ -1,4 +1,5 @@
 import AO3
+from discord import user
 import psycopg2
 import discord
 from discord.ext import commands, tasks
@@ -46,7 +47,7 @@ def has_update(workId):
 
 async def check_all_for_update():
   cur = database.cursor()
-  cur.execute('SELECT WORK_ID, CHANNEL_ID FROM WORKS')
+  cur.execute('SELECT WORK_ID, CHANNEL_ID, USER_ID FROM WORKS')
   work_req = cur.fetchall()
 
   if len(work_req) <= 0:
@@ -56,6 +57,7 @@ async def check_all_for_update():
   for work in work_req:
     work_id = work[0]
     channel_id = work[1]
+    user_id = work[3]
     if has_update(work_id):
       print('Update found!')
       channel = client.get_channel(channel_id)
@@ -63,7 +65,15 @@ async def check_all_for_update():
       cur = database.cursor()
       cur.execute(f'UPDATE WORKS SET CHAPTERS={work.nchapters} WHERE WORK_ID={work_id}')
       database.commit()
-      await channel.send(content=f'@everyone \n Update found for { work.title }! You can read this fic over at: https://archiveofourown.org/works/{work_id}/', allowed_mentions = allowed_mentions)
+      latest_chapter = work.chapters[work.nchapters - 1]
+      text = latest_chapter.text
+      summary = ' '.join(text.split(" ")[:100])
+
+      embed = discord.Embed(color=discord.Colour.from_rgb(153, 0, 0), title=f"Update found for {work.title}!")
+      embed.add_field(name=f"{latest_chapter.title}", value=summary)
+      embed.add_field(name="URL", value=f"Read this fic over at https://archiveofourown.org/works/{work_id}/")
+
+      await channel.send(content=f'<@{user_id}> \n Update found for { work.title }!', embed = embed)
       cur.close()
     else:
       print(f'No update available for { work_id }...')  
@@ -201,21 +211,7 @@ async def get_all_works(ctx):
   
   await ctx.send(f"<@{ctx.author.id}>, here's all of your saved works!")
   await paginator.run(embeds)  
-
-@client.command()
-async def update_test(ctx, workId):
-  work = AO3.Work(workId)
-  latest_chapter = work.chapters[work.nchapters - 1]
-  text = latest_chapter.text
-  summary = ' '.join(text.split(" ")[:50])
-
-  embed = discord.Embed(color=discord.Colour.from_rgb(153, 0, 0), title=f"Update found for {work.title}!")
-  embed.add_field(name=f"{latest_chapter.title}", value=summary)
-  await ctx.send(embed = embed)
-
  
-
-
 # Help command with descriptions
 @client.command()
 async def help(ctx):
