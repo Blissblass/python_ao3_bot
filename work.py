@@ -57,7 +57,7 @@ async def check_all_for_update():
   for work in work_req:
     work_id = work[0]
     channel_id = work[1]
-    user_id = work[3]
+    user_id = work[2]
     if has_update(work_id):
       print('Update found!')
       channel = client.get_channel(channel_id)
