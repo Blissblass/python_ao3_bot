@@ -94,8 +94,8 @@ status = cycle([
   'Use ^help to see all available commands!',
   'We promise to keep it SFW (we wont)',  
   'Use ^help to see all available commands!', 
-  'Your secrets are safe with us!'
-  'Use ^help to see all available commands!'
+  'Your secrets are safe with us!',
+  'Use ^help to see all available commands!',
   'Use ^help to see all available commands!',
   ])
 
