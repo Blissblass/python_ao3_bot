@@ -132,11 +132,6 @@ async def add_work(ctx, workID):
     await ctx.send(content=f"<@{ctx.author.id}>, {workID} is not a valid ID! :( Please try again!", allowed_mentions = allowed_mentions)    
 
 @client.command()
-async def get_channel_id(ctx):
-  await ctx.channel.trigger_typing()
-  await ctx.send(ctx.channel.id)     
-
-@client.command()
 async def fetch_work(ctx, work_id):
   await ctx.channel.trigger_typing()
   if type(int(work_id)) is int and len(work_id) > 0:
@@ -218,13 +213,12 @@ async def get_all_works(ctx):
 async def help(ctx):
   embed = discord.Embed(title='Commands!', color=discord.Colour.from_rgb(153, 0, 0), description='')
 
-  embed.add_field(name='get_channel_id', value='Gets the current channels id!\n', inline=False)
-  embed.add_field(name='get_all_works', value='Gets all the works previously added to the database.\n', inline=False)
-  embed.add_field(name='fetch_work <work_id>', value='Fetches work directly from AO3, used to check work manually in case an update task fails. Meaning you can also fetch works that arent in the database.\n', inline=False)
-  embed.add_field(name='add_work <work_id>', value='Adds a work to the database so it can be periodically checked for updates. (Please use extract_id command to get your work_id)\n', inline=False)
-  embed.add_field(name='remove_work <work_id>', value='Removes work from database.\n', inline=False)
-  embed.add_field(name='extract_id <url>', value='Extracts id from an AO3 url so it can be fetched later on.\n', inline=False)
-  embed.add_field(name="change_notif_channel <work_id *optional*>", value="Changes the notif channel for a work || Changes the notification channel for all of your works if an id isn't given!")
+  embed.add_field(name='get_all_works', value='Gets all the works you previously saved!\n', inline=False)
+  embed.add_field(name='fetch_work <work id>', value='Fetches work directly from AO3, meaning you can also check a work without saving it!\n', inline=False)
+  embed.add_field(name='add_work <work id>', value='Saves work so it can be checked for updates! (Use extract_id to get your work id!)\n', inline=False)
+  embed.add_field(name='remove_work <work id>', value='Unsaves your work, meaning it won\'t get checked for updates!\n', inline=False)
+  embed.add_field(name='extract_id <url>', value='Extracts id from an AO3 url!\n', inline=False)
+  embed.add_field(name="change_notif_channel <work id *optional*>", value="Changes the notif channel for a specific work || Changes the notification channel for all of your works if an id isn't given!")
   await ctx.send(embed=embed)
 
 
