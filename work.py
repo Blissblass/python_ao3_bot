@@ -211,7 +211,7 @@ async def update_test(ctx, workId):
 
   embed = discord.Embed(color=discord.Colour.from_rgb(153, 0, 0), title=f"Update found for {work.title}!")
   embed.add_field(name=f"{latest_chapter.title}", value=summary)
-  ctx.send(embed = embed)
+  await ctx.send(embed = embed)
 
  
 
