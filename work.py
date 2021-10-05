@@ -199,13 +199,13 @@ async def get_all_works(ctx):
     cur_embed.set_thumbnail(url="https://i.imgur.com/q0MqhAe.jpg")
     embeds.append(cur_embed)
   
-  await ctx.send(f"<@{ctx.author.id}>, here's all of your saved works!", embed=cur_embed)
+  await ctx.send(f"<@{ctx.author.id}>, here's all of your saved works!")
   await paginator.run(embeds)  
 
 @client.command()
 async def update_test(ctx, workId):
   work = AO3.Work(workId)
-  latest_chapter = work.chapter[max(work.nchapters)]
+  latest_chapter = work.chapters[max(work.nchapters)]
   text = latest_chapter.text
   summary = ' '.join(text.split(" ")[:50])
   embed = discord.Embed(color=discord.Colour.from_rgb(153, 0, 0), title=f"Update found for {work.title}!")
