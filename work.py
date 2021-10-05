@@ -74,7 +74,7 @@ async def check_all_for_update():
       embed.add_field(name="URL", value=f"Read this fic over at https://archiveofourown.org/works/{work_id}/", inline=False)
       embed.set_thumbnail(url="https://i.imgur.com/q0MqhAe.jpg")
 
-      await channel.send(content=f'<@{user_id}> \n Update found for { work.title }!', embed = embed)
+      await channel.send(content=f'<@{user_id}>, update found for { work.title }!', embed = embed)
       cur.close()
     else:
       print(f'No update available for { work_id }...')  
