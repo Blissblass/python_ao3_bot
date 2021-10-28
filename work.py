@@ -15,7 +15,6 @@ TOKEN = os.environ.get('TOKEN') # Get token from .env file
 USERNAME = os.environ.get('USERNAME')
 PASSWORD = os.environ.get('PASSWORD')
 DATABASE_URL = os.environ.get('DATABASE_URL')
-# database = psycopg2.connect(f"dbname=ao3_bot user={USERNAME} password={PASSWORD}")
 database = psycopg2.connect(DATABASE_URL)
 
 allowed_mentions = discord.AllowedMentions(everyone = True) # Allows the bot to mention people
@@ -70,7 +69,7 @@ async def check_all_for_update():
       summary = ' '.join(text.split(" ")[:100])
 
       embed = discord.Embed(color=discord.Colour.from_rgb(153, 0, 0), title=f"Update found for {work.title}!")
-      embed.add_field(name=f"{latest_chapter.title}:", value=f"{summary}...", inline=False)
+      embed.add_field(name=f"Sumarry:", value=f"{summary}...", inline=False)
       embed.add_field(name="URL:", value=f"Read this fic over at https://archiveofourown.org/works/{work_id}/chapters/{latest_chapter.id}", inline=False)
       embed.set_thumbnail(url="https://i.imgur.com/q0MqhAe.jpg")
 
@@ -78,13 +77,7 @@ async def check_all_for_update():
       cur.close()
     else:
       print(f'No update available for { work_id }...')  
- 
-# AO3 setup 
-
-# url = "https://archiveofourown.org/works/32593318/chapters/80849710" # Get sample work URL
-# workid = AO3.utils.workid_from_url(url) # Extract Work ID
-# work = AO3.Work(workid) # Initiate a new Work class with the Work ID
-
+      
 # -----------------------------------------------
 
 # Discord setup
