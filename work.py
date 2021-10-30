@@ -14,7 +14,7 @@ load_dotenv() # Load dotenv to use .env file
 TOKEN = os.environ.get('TOKEN') # Get token from .env file
 USERNAME = os.environ.get('USERNAME')
 PASSWORD = os.environ.get('PASSWORD')
-DATABASE_URL = os.environ.get('DATABASE_URL')
+DATABASE_URL=os.environ.get('DATABASE_URL')
 database = psycopg2.connect(DATABASE_URL)
 
 allowed_mentions = discord.AllowedMentions(everyone = True) # Allows the bot to mention people
@@ -58,7 +58,7 @@ async def check_all_for_update():
     channel_id = work[1]
     user_id = work[2]
     if has_update(work_id):
-      print('Update found!')
+      print(f'Update found for {work_id}!')
       channel = client.get_channel(channel_id)
       work = AO3.Work(work_id)
       cur = database.cursor()
