@@ -1,2 +1,3 @@
 .env
 database_test.py
+.gitignore
