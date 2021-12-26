@@ -16,7 +16,7 @@ To view all of your saved works, you can simply type ^get_all_works. This will d
 One major challenge that I faced while building this app was figuring out how to periodically check for updates on every work. For this, I had to first figure out a database table setup that would fit the desired effect. I quickly came up with a solution, and created a table as such:
 
 | works | values |
-| --- |
+| --- | --- |
 | id | integer |
 | work_id | integer |
 | chapters | integer |
