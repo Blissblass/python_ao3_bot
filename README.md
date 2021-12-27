@@ -7,7 +7,7 @@ This is an application that I built for a client from September 1st 2021 to Octo
 # Usage
 
 The bot is very simple to start using, all you need is a [Discord](https://discord.com) account and a Discord Server in which you have enough permissions to invite users/bots.
-After adding the bot to a server, you can access all of its commands using ^help. To add a work, you just simply paste the desired work's url after calling ^add_work. This adds the work to the database and from now on it will be periodically checked for updates every 5 minutes.
+After adding the bot to a server through [this link](https://top.gg/en/bot/882596640479936533), you can access all of its commands using ^help. To add a work, you just simply paste the desired work's url after calling ^add_work. This adds the work to the database and from now on it will be periodically checked for updates every 5 minutes.
 
 To view all of your saved works, you can simply type ^get_all_works. This will display every single work you've saved, and also display their ID's so that you can also remove them if you want to.
 
@@ -51,4 +51,4 @@ I am currently planning on adding a function to search for works directly on Dis
 
 # Technologies used
 
-This app was built with Python and uses [Discord.py](https://discordpy.readthedocs.io/en/stable/) and an [AO3 API that was built by Armind Flores](https://github.com/ArmindoFlores/ao3_api).
+This app was built with Python and uses [Discord.py](https://discordpy.readthedocs.io/en/stable/) and an [AO3 API that was built by Armindo Flores](https://github.com/ArmindoFlores/ao3_api).
