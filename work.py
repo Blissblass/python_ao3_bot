@@ -108,8 +108,13 @@ async def ping(ctx):
   await ctx.send(f'Pong! ({ctx.guild.id} | {type(ctx.guild.id)}, {ctx.channel.id} | {type(ctx.channel.id)}, {ctx.author.id} | {type(ctx.author.id)})')
 
 @client.command()
-async def add_work(ctx, workID):
+async def add_work(ctx, workData):
   await ctx.channel.trigger_typing()
+  if workData.startswith("https"):
+    workID = AO3.utils.workid_from_url(workData)
+  else:
+    workID = workData
+
   try:
    work = AO3.Work(int(workID))
    if exists(workID):
@@ -138,12 +143,6 @@ async def fetch_work(ctx, work_id):
     await ctx.send(f"<@{ctx.author.id}>, here's the work you requested!", embed=cur_embed)
   else:
     await ctx.send(f"<@{ctx.author.id}>, Please enter only numbers for the Work ID!")
-
-@client.command()
-async def extract_id(ctx, url):
-  await ctx.channel.trigger_typing()
-  work_id = AO3.utils.workid_from_url(url)
-  await ctx.send(f"<@{ctx.author.id}>, Your extracted work_id is: {work_id}")    
 
 @client.command()
 async def remove_work(ctx, work_id):
@@ -208,7 +207,7 @@ async def help(ctx):
 
   embed.add_field(name='get_all_works', value='Gets all the works you previously saved!\n', inline=False)
   embed.add_field(name='fetch_work <work id>', value='Fetches work directly from AO3, meaning you can also check a work without saving it!\n', inline=False)
-  embed.add_field(name='add_work <work id>', value='Saves work so it can be checked for updates! (Use extract_id to get your work id!)\n', inline=False)
+  embed.add_field(name='add_work <work id | URL>', value='Saves work so it can be checked for updates! (Use extract_id to get your work id!)\n', inline=False)
   embed.add_field(name='remove_work <work id>', value='Unsaves your work, meaning it won\'t get checked for updates!\n', inline=False)
   embed.add_field(name='extract_id <url>', value='Extracts id from an AO3 url!\n', inline=False)
   embed.add_field(name="change_notif_channel <work id *optional*>", value="Changes the notif channel for a specific work || Changes the notification channel for all of your works if an id isn't given!")
