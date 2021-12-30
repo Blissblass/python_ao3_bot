@@ -209,7 +209,6 @@ async def help(ctx):
   embed.add_field(name='fetch_work <work id>', value='Fetches work directly from AO3, meaning you can also check a work without saving it!\n', inline=False)
   embed.add_field(name='add_work <work id | URL>', value='Saves work so it can be checked for updates! (Use extract_id to get your work id!)\n', inline=False)
   embed.add_field(name='remove_work <work id>', value='Unsaves your work, meaning it won\'t get checked for updates!\n', inline=False)
-  embed.add_field(name='extract_id <url>', value='Extracts id from an AO3 url!\n', inline=False)
   embed.add_field(name="change_notif_channel <work id *optional*>", value="Changes the notif channel for a specific work || Changes the notification channel for all of your works if an id isn't given!")
   await ctx.send(embed=embed)
 
