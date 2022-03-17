@@ -57,26 +57,32 @@ async def check_all_for_update():
     work_id = work[0]
     channel_id = work[1]
     user_id = work[2]
-    if has_update(work_id):
-      print(f'Update found for {work_id}!')
-      channel = client.get_channel(channel_id)
-      work = AO3.Work(work_id)
-      cur = database.cursor()
-      cur.execute(f'UPDATE WORKS SET CHAPTERS={work.nchapters} WHERE WORK_ID={work_id}')
-      database.commit()
-      latest_chapter = work.chapters[work.nchapters - 1]
-      text = latest_chapter.text
-      summary = ' '.join(text.split(" ")[:100])
+    
+    try:
+      if has_update(work_id):
+        print(f'Update found for {work_id}!')
+        channel = client.get_channel(channel_id)
+        work = AO3.Work(work_id)
+        cur = database.cursor()
+        cur.execute(f'UPDATE WORKS SET CHAPTERS={work.nchapters} WHERE WORK_ID={work_id}')
+        database.commit()
+        latest_chapter = work.chapters[work.nchapters - 1]
+        text = latest_chapter.text
+        summary = ' '.join(text.split(" ")[:100])
 
-      embed = discord.Embed(color=discord.Colour.from_rgb(153, 0, 0), title=f"Update found for {work.title}!")
-      embed.add_field(name=f"Sumarry:", value=f"{summary}...", inline=False)
-      embed.add_field(name="URL:", value=f"Read this fic over at https://archiveofourown.org/works/{work_id}/chapters/{latest_chapter.id}", inline=False)
-      embed.set_thumbnail(url="https://i.imgur.com/q0MqhAe.jpg")
+        embed = discord.Embed(color=discord.Colour.from_rgb(153, 0, 0), title=f"Update found for {work.title}!")
+        embed.add_field(name=f"Sumarry:", value=f"{summary}...", inline=False)
+        embed.add_field(name="URL:", value=f"Read this fic over at https://archiveofourown.org/works/{work_id}/chapters/{latest_chapter.id}", inline=False)
+        embed.set_thumbnail(url="https://i.imgur.com/q0MqhAe.jpg")
 
-      await channel.send(content=f'<@{user_id}>, update found for { work.title }!', embed = embed)
-      cur.close()
-    else:
-      print(f'No update available for { work_id }...')  
+        await channel.send(content=f'<@{user_id}>, update found for { work.title }!', embed = embed)
+        cur.close()
+      else:
+        print(f'No update available for { work_id }...')
+    except as e:
+      print(f"Exception caught for {work_id}... Adding it to the end of the list.")
+      work_req.append(work)
+      continue
       
 # -----------------------------------------------
 
