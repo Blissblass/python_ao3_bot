@@ -7,7 +7,7 @@ import DiscordUtils
 from dotenv import load_dotenv
 import os
 from itertools import cycle
-import time
+import asyncio
 
 # -- SETUP --
 
@@ -55,7 +55,7 @@ async def check_all_for_update():
     
 
   for work in work_req:
-    time.sleep(2)
+    await asyncio.sleep(2)
 
     work_id = work[0]
     channel_id = work[1]
@@ -86,7 +86,7 @@ async def check_all_for_update():
       print(f"Exception caught for {work_id}... Adding it to the end of the list.")
       print(e)
       work_req.append(work)
-      time.sleep(10)
+      asyncio.sleep(10)
       continue
       
 # -----------------------------------------------
