@@ -228,7 +228,7 @@ async def help(ctx):
 async def change_status():
   await client.change_presence(activity=discord.Game(next(status)))   
 
-@tasks.loop(minutes=5)
+@tasks.loop(minutes=30)
 async def check_update():
   await check_all_for_update()
 
