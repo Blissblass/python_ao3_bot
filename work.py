@@ -7,6 +7,7 @@ import DiscordUtils
 from dotenv import load_dotenv
 import os
 from itertools import cycle
+import time
 
 # -- SETUP --
 
@@ -83,6 +84,7 @@ async def check_all_for_update():
       print(f"Exception caught for {work_id}... Adding it to the end of the list.")
       print(e)
       work_req.append(work)
+      time.sleep(5)
       continue
       
 # -----------------------------------------------
