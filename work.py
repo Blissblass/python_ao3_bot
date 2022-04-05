@@ -55,6 +55,8 @@ async def check_all_for_update():
     
 
   for work in work_req:
+    time.sleep(2)
+
     work_id = work[0]
     channel_id = work[1]
     user_id = work[2]
@@ -78,7 +80,6 @@ async def check_all_for_update():
 
         await channel.send(content=f'<@{user_id}>, update found for { work.title }!', embed = embed)
         cur.close()
-        time.sleep(2)
       else:
         print(f'No update available for { work_id }...')
     except Exception as e:
