@@ -79,8 +79,9 @@ async def check_all_for_update():
         cur.close()
       else:
         print(f'No update available for { work_id }...')
-    except as e:
+    except Exception as e:
       print(f"Exception caught for {work_id}... Adding it to the end of the list.")
+      print(e)
       work_req.append(work)
       continue
       
