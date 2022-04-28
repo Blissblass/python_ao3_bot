@@ -1,22 +1,15 @@
 import AO3
 from discord import user
-import psycopg2
 import discord
 from discord.ext import commands, tasks
 import DiscordUtils
-from dotenv import load_dotenv
-import os
 from itertools import cycle
 import asyncio
+from bin.setup import *
 
 # -- SETUP --
 
-load_dotenv() # Load dotenv to use .env file
-TOKEN = os.environ.get('DEV_TOKEN') if os.environ.get('ENV') == 'DEV' else os.environ.get('TOKEN') # Get token from .env file
-USERNAME = os.environ.get('DEV_USERNAME') if os.environ.get('ENV') == 'DEV' else os.environ.get('USERNAME')
-PASSWORD = os.environ.get('DEV_PASSWORD') if os.environ.get('ENV') == 'DEV' else os.environ.get('PASSWORD')
-DATABASE_URL = os.environ.get('DEV_DATABASE_URL') if os.environ.get('ENV') == 'DEV' else os.environ.get('DATABASE_URL')
-database = psycopg2.connect(DATABASE_URL)
+database = setup_database()
 
 allowed_mentions = discord.AllowedMentions(everyone = True) # Allows the bot to mention people
 
