@@ -12,10 +12,10 @@ import asyncio
 # -- SETUP --
 
 load_dotenv() # Load dotenv to use .env file
-TOKEN = os.environ.get('TOKEN') # Get token from .env file
-USERNAME = os.environ.get('USERNAME')
-PASSWORD = os.environ.get('PASSWORD')
-DATABASE_URL=os.environ.get('DATABASE_URL')
+TOKEN = os.environ.get('DEV_TOKEN') if os.environ.get('ENV') == 'DEV' else os.environ.get('TOKEN') # Get token from .env file
+USERNAME = os.environ.get('DEV_USERNAME') if os.environ.get('ENV') == 'DEV' else os.environ.get('USERNAME')
+PASSWORD = os.environ.get('DEV_PASSWORD') if os.environ.get('ENV') == 'DEV' else os.environ.get('PASSWORD')
+DATABASE_URL = os.environ.get('DEV_DATABASE_URL') if os.environ.get('ENV') == 'DEV' else os.environ.get('DATABASE_URL')
 database = psycopg2.connect(DATABASE_URL)
 
 allowed_mentions = discord.AllowedMentions(everyone = True) # Allows the bot to mention people
