@@ -1,4 +1,6 @@
 import asyncio
+import AO3
+import discord
 from bin.setup import database
 
 def split(str):
