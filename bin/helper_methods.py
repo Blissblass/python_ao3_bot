@@ -1,7 +1,7 @@
 import asyncio
 import AO3
 import discord
-from bin.setup import database
+from bin.setup import database, client
 
 def split(str):
   return [char for char in str]
