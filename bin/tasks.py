@@ -8,10 +8,11 @@ import threading
 
 STATUS = cycle([
   'Keeping fandoms alive 24/7!', 
-  'Use ^help to see all available commands!',
-  'We promise to keep it SFW!',  
+  'Use ^help to see all available commands!',  
   'Use ^help to see all available commands!', 
   'Your secrets are safe with us!',
+  'Use ^help to see all available commands!',
+  'AO3 Bot 2: Electric Boogaloo',
   'Use ^help to see all available commands!',
   'Use ^help to see all available commands!',
 ])
