@@ -29,12 +29,12 @@ async def add_work(ctx, workData):
   try:
    work = AO3.Work(int(workID))
    if exists(workID):
-     await ctx.send(f'Work named {work.title} already exists!')  
+     await ctx.send(f'<@{ctx.author.id}>, work named {work.title} already exists!')  
    else:
      cur = database.cursor()
      cur.execute(f'INSERT INTO WORKS(WORK_ID, CHAPTERS, SERVER_ID, CHANNEL_ID, USER_ID) VALUES ({workID}, {work.nchapters}, {ctx.guild.id}, {ctx.channel.id}, {ctx.author.id})')
      database.commit()
-     await ctx.send(f'Work named {work.title} has been saved!')
+     await ctx.send(f'<@{ctx.author.id}>, work named {work.title} has been saved!')
      cur.close()
   except Exception as e:
     print(e)
@@ -64,7 +64,7 @@ async def remove_work(ctx, work_id):
    database.commit()
    await ctx.channel.trigger_typing()
    work = AO3.Work(work_id)
-   return await ctx.send(f"Removed work titled {work.title}!")
+   return await ctx.send(f"<@{ctx.author.id}>, Removed work titled {work.title}!")
   
   await ctx.send(f"<@{ctx.author.id}>, {work_id} is not saved to the database and therefore cannot be removed!")
 
@@ -90,9 +90,9 @@ async def get_works(ctx, page=None):
   if page:
     limit_start = f"{int(page) - 1}0" # If page is 1, we get first 10, if page is 2, we get first 20
     limit_end = f"{page}0" # If start was 10, we end at 20
-    cur.execute(f"SELECT * FROM WORKS WHERE user_id = {ctx.author.id} LIMIT {limit_end} OFFSET {limit_start}")
+    cur.execute(f"SELECT  WORK_ID, CHANNEL_ID, USER_ID FROM WORKS WHERE user_id = {ctx.author.id} LIMIT {limit_end} OFFSET {limit_start}")
   else:
-    cur.execute(f'SELECT * FROM WORKS WHERE user_id = {ctx.author.id}')
+    cur.execute(f'SELECT  WORK_ID, CHANNEL_ID, USER_ID FROM WORKS WHERE user_id = {ctx.author.id}')
   cl_req = cur.fetchall()
   cur.close()
 
@@ -103,24 +103,9 @@ async def get_works(ctx, page=None):
       return await ctx.send(f"<@{ctx.author.id}>, you haven't saved any works yet!")
   if len(cl_req) > 10:
     return await ctx.send(f"<@{ctx.author.id}>, it looks like you have a lot of saved works, please choose a page!")
-
-  threads = []
-  works = []
-
-  print(f"Loading {len(cl_req)} works...")
-  start = time.time()
-  for req_work in cl_req:
-    work_id = req_work[1]
-    work = AO3.Work(work_id, load=False, load_chapters=False)
-    work.channel_id = req_work[4]
-    work.user_id = req_work[5]
-    works.append(work)
-    threads.append(work.reload(threaded=True))
-
-  for thread in threads:
-    thread.join()
-
-  print(f"Loaded {len(works)} works in {round(time.time() - start, 1)} seconds")
+  
+  await ctx.channel.trigger_typing()
+  works = await load_works(cl_req)
 
   embeds = []
   paginator = DiscordUtils.Pagination.CustomEmbedPaginator(ctx, remove_reactions=True)
@@ -129,7 +114,6 @@ async def get_works(ctx, page=None):
   paginator.add_reaction('⏩', "next")
   paginator.add_reaction('⏭️', "last")
 
-  await ctx.channel.trigger_typing()
   try:
     for work in works:
       work_id = work.id
@@ -145,7 +129,7 @@ async def get_works(ctx, page=None):
     print(e)
     return await ctx.send(f"<@{ctx.author.id}>, Something went wrong while fetching your works :(")
   
-  await ctx.send(f"<@{ctx.author.id}>, here's all of your saved works!")
+  await ctx.send(f"<@{ctx.author.id}>, here's your saved works!")
   await paginator.run(embeds)  
  
 # Help command with descriptions
