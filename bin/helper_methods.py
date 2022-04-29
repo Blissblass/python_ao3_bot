@@ -89,6 +89,13 @@ async def check_all_for_update():
       work_req.append(work)
       await asyncio.sleep(10)
       continue
+
+def run_loop():
+  loop = asyncio.new_event_loop()
+  asyncio.set_event_loop(loop)
+
+  loop.run_until_complete(check_all_for_update())
+  loop.close()
   
     
 
