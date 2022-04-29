@@ -60,7 +60,7 @@ async def remove_work(ctx, work_id):
    work = AO3.Work(work_id)
    return await ctx.send(f"Removed work titled {work.title}!")
   
-  await ctx.send(f"<@{ctx.author.id}>, {work_id} is not saved to the database and therefore cannot be removed! Please try again :(")
+  await ctx.send(f"<@{ctx.author.id}>, {work_id} is not saved to the database and therefore cannot be removed!")
 
 @client.command()
 async def change_notif_channel(ctx, workId=None):
@@ -79,13 +79,25 @@ async def change_notif_channel(ctx, workId=None):
     await ctx.send(f"<@{ctx.author.id}>, work titled {work.title} has been updated to ping in <#{ctx.channel.id}>!")
 
 @client.command()
-async def get_all_works(ctx):
+async def get_works(ctx, page=None):
   cur = database.cursor()
-  cur.execute(f'SELECT * FROM WORKS WHERE user_id = {ctx.author.id}')
+  if page:
+    limit_start = f"{int(page) - 1}0" # If page is 1, we get first 10, if page is 2, we get first 20
+    limit_end = f"{page}0" # If start was 10, we end at 20
+    cur.execute(f"SELECT * FROM WORKS WHERE user_id = {ctx.author.id} LIMIT {limit_end} OFFSET {limit_start}")
+  else:
+    cur.execute(f'SELECT * FROM WORKS WHERE user_id = {ctx.author.id}')
   cl_req = cur.fetchall()
-  cur.close()    
+  cur.close()
+  print(cl_req)
   if len(cl_req) <= 0:
-    return await ctx.send(f"<@{ctx.author.id}>, you haven't saved any works yet!") 
+    if page:
+      return await ctx.send(f"<@{ctx.author.id}>, this page is empty!")
+    else:
+      return await ctx.send(f"<@{ctx.author.id}>, you haven't saved any works yet!")
+  if len(cl_req) > 10:
+    return await ctx.send(f"<@{ctx.author.id}>, it looks like you have a lot of saved works, please choose a page!")
+
   embeds = []
   paginator = DiscordUtils.Pagination.CustomEmbedPaginator(ctx, remove_reactions=True)
   paginator.add_reaction('⏮️', "first")
@@ -94,14 +106,18 @@ async def get_all_works(ctx):
   paginator.add_reaction('⏭️', "last")
 
   await ctx.channel.trigger_typing()
-  for row in cl_req:
-    work = AO3.Work(row[1])
-    cur_embed = discord.Embed(color=discord.Colour.from_rgb(153, 0, 0), title=work.title)
-    cur_embed.add_field(name="Summary:", value=work.summary, inline=False)
-    cur_embed.add_field(name="Details:", inline=False, value=f"**ID:** {row[1]}, **Chapters:** {row[2]}" + (f' **Channel**: <#{row[4]}>\n' if client.get_channel(row[4]) != None else ' **Channel:** <:x:894298558814109788>\n'))
-    cur_embed.add_field(name="URL:", value=f"Read this fic at: https://archiveofourown.org/works/{row[1]}/", inline=False)
-    cur_embed.set_thumbnail(url="https://i.imgur.com/q0MqhAe.jpg")
-    embeds.append(cur_embed)
+  try:
+    for row in cl_req:
+      work = AO3.Work(row[1])
+      cur_embed = discord.Embed(color=discord.Colour.from_rgb(153, 0, 0), title=work.title)
+      cur_embed.add_field(name="Summary:", value=work.summary, inline=False)
+      cur_embed.add_field(name="Details:", inline=False, value=f"**ID:** {row[1]}, **Chapters:** {row[2]}" + (f' **Channel**: <#{row[4]}>\n' if client.get_channel(row[4]) != None else ' **Channel:** <:x:894298558814109788>\n'))
+      cur_embed.add_field(name="URL:", value=f"Read this fic at: https://archiveofourown.org/works/{row[1]}/", inline=False)
+      cur_embed.set_thumbnail(url="https://i.imgur.com/q0MqhAe.jpg")
+      embeds.append(cur_embed)
+  except Exception as e:
+    print(e)
+    ctx.send(f"@{ctx.author.id} Something went wrong while fetching your works :(")
   
   await ctx.send(f"<@{ctx.author.id}>, here's all of your saved works!")
   await paginator.run(embeds)  
@@ -111,7 +127,7 @@ async def get_all_works(ctx):
 async def help(ctx):
   embed = discord.Embed(title='Commands!', color=discord.Colour.from_rgb(153, 0, 0), description='')
 
-  embed.add_field(name='get_all_works', value='Gets all the works you previously saved!\n', inline=False)
+  embed.add_field(name='get_works <page *optional*>', value='Gets all the works you previously saved! || Splits your saved works into pages of 10 works per page.\n', inline=False)
   embed.add_field(name='fetch_work <work id>', value='Fetches work directly from AO3, meaning you can also check a work without saving it!\n', inline=False)
   embed.add_field(name='add_work <work id | URL>', value='Saves work so it can be checked for updates! (Use extract_id to get your work id!)\n', inline=False)
   embed.add_field(name='remove_work <work id>', value='Unsaves your work, meaning it won\'t get checked for updates!\n', inline=False)

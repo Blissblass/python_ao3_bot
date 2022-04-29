@@ -18,13 +18,13 @@ def exists(workId):
     return False  
 
 
-def has_update(workId):
+def has_update(workId, work):
   cur = database.cursor()
   cur.execute(f'SELECT chapters FROM WORKS WHERE WORK_ID = { workId }')
   savedWork = cur.fetchone()
 
   saved_nchapters = savedWork[0]
-  newWork_nchapters = AO3.Work(workId).nchapters
+  newWork_nchapters = work.nchapters
   cur.close()
   return saved_nchapters < newWork_nchapters
 
@@ -38,17 +38,15 @@ async def check_all_for_update():
     
 
   for work in work_req:
-    await asyncio.sleep(2)
-
     work_id = work[0]
     channel_id = work[1]
     user_id = work[2]
+    work = AO3.Work(work_id)
     
     try:
-      if has_update(work_id):
+      if has_update(work_id, work):
         print(f'Update found for {work_id}!')
         channel = client.get_channel(channel_id)
-        work = AO3.Work(work_id)
         cur = database.cursor()
         cur.execute(f'UPDATE WORKS SET CHAPTERS={work.nchapters} WHERE WORK_ID={work_id}')
         database.commit()
