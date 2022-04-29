@@ -1,4 +1,5 @@
 import asyncio
+import time
 import AO3
 import discord
 from bin.setup import database, client
@@ -28,21 +29,42 @@ def has_update(workId, work):
   cur.close()
   return saved_nchapters < newWork_nchapters
 
+async def load_works(work_req):
+  threads = []
+  works = []
+
+  print(f"Loading {len(work_req)} works...")
+  start = time.time()
+  for req_work in work_req:
+    work_id = req_work[0]
+    work = AO3.Work(work_id, load=False, load_chapters=False)
+    work.channel_id = req_work[1]
+    work.user_id = req_work[2]
+    works.append(work)
+    threads.append(work.reload(threaded=True))
+
+  for thread in threads:
+    thread.join()
+
+  print(f"Loaded {len(works)} works in {round(time.time() - start, 1)} seconds")
+  return works
+
 async def check_all_for_update():
   cur = database.cursor()
   cur.execute('SELECT WORK_ID, CHANNEL_ID, USER_ID FROM WORKS')
   work_req = cur.fetchall()
 
+
   if len(work_req) <= 0:
     return print("Database empty...")
     
+  works = await asyncio.gather(load_works(work_req))
 
-  for work in work_req:
-    work_id = work[0]
-    channel_id = work[1]
-    user_id = work[2]
-    work = AO3.Work(work_id)
-    
+  for work in works[0]:
+    work_id = work.id
+    channel_id = work.channel_id
+    user_id = work.user_id
+
     try:
       if has_update(work_id, work):
         print(f'Update found for {work_id}!')
@@ -53,12 +75,10 @@ async def check_all_for_update():
         latest_chapter = work.chapters[work.nchapters - 1]
         text = latest_chapter.text
         summary = ' '.join(text.split(" ")[:100])
-
         embed = discord.Embed(color=discord.Colour.from_rgb(153, 0, 0), title=f"Update found for {work.title}!")
         embed.add_field(name=f"Sumarry:", value=f"{summary}...", inline=False)
         embed.add_field(name="URL:", value=f"Read this fic over at https://archiveofourown.org/works/{work_id}/chapters/{latest_chapter.id}", inline=False)
         embed.set_thumbnail(url="https://i.imgur.com/q0MqhAe.jpg")
-
         await channel.send(content=f'<@{user_id}>, update found for { work.title }!', embed = embed)
         cur.close()
       else:
@@ -67,5 +87,9 @@ async def check_all_for_update():
       print(f"Exception caught for {work_id}... Adding it to the end of the list.")
       print(e)
       work_req.append(work)
-      asyncio.sleep(10)
+      await asyncio.sleep(10)
       continue
+  
+    
+
+  print("Iterated through all works!")

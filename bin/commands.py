@@ -13,6 +13,11 @@ async def ping(ctx):
   await ctx.send(f'Pong! ({ctx.guild.id} | {type(ctx.guild.id)}, {ctx.channel.id} | {type(ctx.channel.id)}, {ctx.author.id} | {type(ctx.author.id)})')
 
 @client.command()
+async def get_id(ctx, url):
+  workID = AO3.utils.workid_from_url(url)
+  await ctx.send(f"<@{ctx.author.id}>, here's the id you requested! **{workID}**")
+
+@client.command()
 async def add_work(ctx, workData):
   await ctx.channel.trigger_typing()
   if workData.startswith("https"):
@@ -89,7 +94,7 @@ async def get_works(ctx, page=None):
     cur.execute(f'SELECT * FROM WORKS WHERE user_id = {ctx.author.id}')
   cl_req = cur.fetchall()
   cur.close()
-  print(cl_req)
+
   if len(cl_req) <= 0:
     if page:
       return await ctx.send(f"<@{ctx.author.id}>, this page is empty!")
@@ -128,8 +133,9 @@ async def help(ctx):
   embed = discord.Embed(title='Commands!', color=discord.Colour.from_rgb(153, 0, 0), description='')
 
   embed.add_field(name='get_works <page *optional*>', value='Gets all the works you previously saved! || Splits your saved works into pages of 10 works per page.\n', inline=False)
+  embed.add_field(name="get_id <url>", value="Extracts work id from a url!")
   embed.add_field(name='fetch_work <work id>', value='Fetches work directly from AO3, meaning you can also check a work without saving it!\n', inline=False)
   embed.add_field(name='add_work <work id | URL>', value='Saves work so it can be checked for updates! (Use extract_id to get your work id!)\n', inline=False)
-  embed.add_field(name='remove_work <work id>', value='Unsaves your work, meaning it won\'t get checked for updates!\n', inline=False)
-  embed.add_field(name="change_notif_channel <work id *optional*>", value="Changes the notif channel for a specific work || Changes the notification channel for all of your works if an id isn't given!")
+  embed.add_field(name='remove_work <work id>', value='Removes your work, meaning it won\'t get checked for updates!\n', inline=False)
+  embed.add_field(name="change_notif_channel <work id *optional*>", value="Changes the notification channel for all of your works if an id isn't given! || Changes the notif channel for a specific work")
   await ctx.send(embed=embed)
