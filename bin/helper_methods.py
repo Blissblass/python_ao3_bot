@@ -36,12 +36,18 @@ async def load_works(work_req):
   print(f"Loading {len(work_req)} works...")
   start = time.time()
   for req_work in work_req:
-    work_id = req_work[0]
-    work = AO3.Work(work_id, load=False, load_chapters=False)
-    work.channel_id = req_work[1]
-    work.user_id = req_work[2]
-    works.append(work)
-    threads.append(work.reload(threaded=True))
+    try:
+      work_id = req_work[0]
+      work = AO3.Work(work_id, load=False, load_chapters=False)
+      work.channel_id = req_work[1]
+      work.user_id = req_work[2]
+      works.append(work)
+      threads.append(work.reload(threaded=True))
+    except Exception as e:
+      print(e)
+      print(f"Exception caught while loading {work_id}... Adding it to the end of the list")
+      work_req.append(req_work)
+      await asyncio.sleep(10)
 
   for thread in threads:
     thread.join()
