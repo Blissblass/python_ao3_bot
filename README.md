@@ -1,10 +1,9 @@
 # README
+# --THIS PROJECT IS RETIRED--
 
 # Project: AO3 Discord Bot
 
 This is an application that I built for a client from September 1st 2021 to October 5th  2021. The client directed the development, and I worked along with them to build the end product. The project was initially cancelled, however we started working on it again after a few weeks around October 2nd. Our main goal for this project was to create an app for the popular social messaging app [Discord](https://discord.com) that would check for updates on [AO3](https://archiveofourown.org) and notify you. [AO3](https://archiveofourown.org) is a non-profit open source website where you can share fictious stories about movies, shows, books etc.
-
-# --THIS PROJECT IS RETIRED--
 
 # Usage
 
