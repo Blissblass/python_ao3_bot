@@ -1,9 +1,10 @@
 from bin.setup import client
 from bin.setup import database
-from bin.helper_methods import exists
+from bin.helper_methods import exists, load_works
 import DiscordUtils
 import discord
 import AO3
+import time
 
 allowed_mentions = discord.AllowedMentions(everyone = True) # Allows the bot to mention people
 
@@ -103,6 +104,24 @@ async def get_works(ctx, page=None):
   if len(cl_req) > 10:
     return await ctx.send(f"<@{ctx.author.id}>, it looks like you have a lot of saved works, please choose a page!")
 
+  threads = []
+  works = []
+
+  print(f"Loading {len(cl_req)} works...")
+  start = time.time()
+  for req_work in cl_req:
+    work_id = req_work[1]
+    work = AO3.Work(work_id, load=False, load_chapters=False)
+    work.channel_id = req_work[4]
+    work.user_id = req_work[5]
+    works.append(work)
+    threads.append(work.reload(threaded=True))
+
+  for thread in threads:
+    thread.join()
+
+  print(f"Loaded {len(works)} works in {round(time.time() - start, 1)} seconds")
+
   embeds = []
   paginator = DiscordUtils.Pagination.CustomEmbedPaginator(ctx, remove_reactions=True)
   paginator.add_reaction('⏮️', "first")
@@ -112,17 +131,19 @@ async def get_works(ctx, page=None):
 
   await ctx.channel.trigger_typing()
   try:
-    for row in cl_req:
-      work = AO3.Work(row[1])
+    for work in works:
+      work_id = work.id
+      channel_id = work.channel_id
+
       cur_embed = discord.Embed(color=discord.Colour.from_rgb(153, 0, 0), title=work.title)
       cur_embed.add_field(name="Summary:", value=work.summary, inline=False)
-      cur_embed.add_field(name="Details:", inline=False, value=f"**ID:** {row[1]}, **Chapters:** {row[2]}" + (f' **Channel**: <#{row[4]}>\n' if client.get_channel(row[4]) != None else ' **Channel:** <:x:894298558814109788>\n'))
-      cur_embed.add_field(name="URL:", value=f"Read this fic at: https://archiveofourown.org/works/{row[1]}/", inline=False)
+      cur_embed.add_field(name="Details:", inline=False, value=f"**ID:** {work_id}, **Chapters:** {work.nchapters}" + (f' **Channel**: <#{channel_id}>\n' if client.get_channel(channel_id) != None else ' **Channel:** <:x:894298558814109788>\n'))
+      cur_embed.add_field(name="URL:", value=f"Read this fic at: https://archiveofourown.org/works/{work_id}/", inline=False)
       cur_embed.set_thumbnail(url="https://i.imgur.com/q0MqhAe.jpg")
       embeds.append(cur_embed)
   except Exception as e:
     print(e)
-    ctx.send(f"@{ctx.author.id} Something went wrong while fetching your works :(")
+    return await ctx.send(f"<@{ctx.author.id}>, Something went wrong while fetching your works :(")
   
   await ctx.send(f"<@{ctx.author.id}>, here's all of your saved works!")
   await paginator.run(embeds)  
